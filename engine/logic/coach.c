@@ -39,9 +39,29 @@ bool coach_both_teams = true;
  * Thank you for your attention to this matter!
  * ------------------------------------------------------------------------- */
 
+// my functions
+static float find_distance(struct Vec2 v1, struct Vec2 v2) {
+    float dx = fabs(v1.x - v2.x), dy = fabs(v1.y - v2.y);
+    return sqrt(dx * dx + dy * dy);
+}
+static struct Vec2 find_direction(struct Vec2 v) {
+    float leng = sqrt(v.x * v.x + v.y * v.y);
+    struct Vec2 res;
+    res.x = 0;
+    res.y = 0;
+    if(leng < 1e-5) return res;
+    res.x = v.x / leng;
+    res.y = v.y / leng;
+    return res;
+}
+
 /* Team 1 movement logic */
-void movement_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_1(struct Player *self, const struct Scene *scene) { (void)scene; }
+void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
+    
+}
+void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
+    
+}
 void movement_logic_1_2(struct Player *self, const struct Scene *scene) { (void)scene; }
 void movement_logic_1_3(struct Player *self, const struct Scene *scene) { (void)scene; }
 void movement_logic_1_4(struct Player *self, const struct Scene *scene) { (void)scene; }
@@ -72,20 +92,80 @@ void shooting_logic_2_4(struct Player *self, const struct Scene *scene) { (void)
 void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
 
 /* Team 1 change_state logic */
-void change_state_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void change_state_logic_1_0(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_1_1(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_1_2(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_1_3(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_1_4(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_1_5(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
 
 /* Team 2 change_state logic */
-void change_state_logic_2_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void change_state_logic_2_0(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_2_1(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_2_2(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_2_3(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_2_4(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+void change_state_logic_2_5(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
 
 /* -------------------------------------------------------------------------
  * Lookup tables for factory

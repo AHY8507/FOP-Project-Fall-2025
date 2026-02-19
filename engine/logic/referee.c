@@ -129,7 +129,7 @@ void verify_talents(struct Talents talents) {
        1 <= talents.shooting && talents.shooting <= MAX_TALENT_PER_SKILL &&
        1 <= talents.agility &&  talents.agility <= MAX_TALENT_PER_SKILL &&
        1 <= talents.dribbling && talents.dribbling <= MAX_TALENT_PER_SKILL &&
-       1 <= sum && sum <= MAX_TALENT_PER_SKILL)) // as phase2 said
+       1 <= sum && sum <= MAX_TALENT_PER_PLAYER)) // as phase2 said
         printf("ERROR: Invalid talents! Values: defence=%d, agility=%d, dribbling=%d, shooting=%d, sum=%d\n",
         talents.defence, 
         talents.agility, 
