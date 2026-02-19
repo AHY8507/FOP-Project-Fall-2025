@@ -44,7 +44,7 @@ static float find_distance(struct Vec2 v1, struct Vec2 v2) {
     float dx = fabs(v1.x - v2.x), dy = fabs(v1.y - v2.y);
     return sqrt(dx * dx + dy * dy);
 }
-static struct Vec2 find_max_velo(struct Vec2 v, float maxi) {
+static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
     float leng = sqrt(v.x * v.x + v.y * v.y);
     struct Vec2 res; 
     res.x = v.x;
@@ -65,23 +65,147 @@ static struct Vec2 find_direction(struct Vec2 v) {
 
 /* Team 1 movement logic */
 void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
-    
+    struct Vec2 place;
+    place.x = PITCH_MARGIN + 35;
+    place.y = scene->ball->position.y;
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
 }
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
-    
+    struct Vec2 place;
+    struct Ball *ball = scene->ball;
+    if(ball->position.x < CENTER_X) {
+        place.x = (ball->position.x + PITCH_MARGIN) / 2.0f;
+        place.y = (ball->position.y + CENTER_Y - 120) / 2.0f;
+    }
+    else {
+        place.x = CENTER_X - 120;
+        place.y = CENTER_Y - 150;
+    }
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
 }
-void movement_logic_1_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    struct Ball *ball = scene->ball;
+    if(ball->position.x < CENTER_X) {
+        place.x = (ball->position.x + PITCH_MARGIN) / 2.0f;
+        place.y = (ball->position.y + CENTER_Y + 120) / 2.0f;
+    }
+    else {
+        place.x = CENTER_X - 120;
+        place.y = CENTER_Y + 150;
+    }
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    place.x = scene->ball->position.x - 40;
+    place.y = scene->ball->position.y;
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    place.x = scene->ball->position.x;
+    place.y = scene->ball->position.y - 20;
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    place.x = scene->ball->position.x;
+    place.y = scene->ball->position.y + 20;
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
 
 /* Team 2 movement logic */
-void movement_logic_2_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    place.x = SCREEN_WIDTH - PITCH_MARGIN - 35;
+    place.y = scene->ball->position.y;
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_2_1(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    struct Ball *ball = scene->ball;
+    if(ball->position.x > CENTER_X) {
+        place.x = (ball->position.x + (SCREEN_WIDTH - PITCH_MARGIN)) / 2.0f;
+        place.y = (ball->position.y + CENTER_Y - 120) / 2.0f;
+    }
+    else {
+        place.x = CENTER_X + 120;
+        place.y = CENTER_Y - 150;
+    }
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    struct Ball *ball = scene->ball;
+    if(ball->position.x > CENTER_X) {
+        place.x = (ball->position.x + (SCREEN_WIDTH - PITCH_MARGIN)) / 2.0f;
+        place.y = (ball->position.y + CENTER_Y - 120) / 2.0f;
+    }
+    else {
+        place.x = CENTER_X + 120;
+        place.y = CENTER_Y + 150;
+    }
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    place.x = scene->ball->position.x + 40;
+    place.y = scene->ball->position.y;
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    place.x = scene->ball->position.x;
+    place.y = scene->ball->position.y - 20;
+
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
+void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    place.x = scene->ball->position.x;
+    place.y = scene->ball->position.y + 20;
+
+    struct Vec2 velo;
+    velo.x = place.x - self->position.x;
+    velo.y = place.y - self->position.y;
+
+    self->velocity = find_max_velocity(velo, self->talents.agility);
+}
 
 /* Team 1 shooting logic */
 void shooting_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
@@ -103,37 +227,37 @@ void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { (void)
 void change_state_logic_1_0(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_1_1(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_1_2(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_1_3(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_1_4(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_1_5(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 
@@ -141,37 +265,37 @@ void change_state_logic_1_5(struct Player *self, const struct Scene *scene) {
 void change_state_logic_2_0(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_2_1(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_2_2(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_2_3(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_2_4(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 void change_state_logic_2_5(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < BALL_RADIUS) self->state = INTERCEPTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
     else self->state = MOVING;
 }
 
