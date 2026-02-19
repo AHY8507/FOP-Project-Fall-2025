@@ -44,6 +44,14 @@ static float find_distance(struct Vec2 v1, struct Vec2 v2) {
     float dx = fabs(v1.x - v2.x), dy = fabs(v1.y - v2.y);
     return sqrt(dx * dx + dy * dy);
 }
+static struct Vec2 find_max_velo(struct Vec2 v, float maxi) {
+    float leng = sqrt(v.x * v.x + v.y * v.y);
+    struct Vec2 res; 
+    res.x = v.x;
+    res.y = v.y;
+    if(leng > maxi) { res.x /= leng;res.x *= maxi; res.y /= leng;res.y *= maxi; }
+    return res;
+} 
 static struct Vec2 find_direction(struct Vec2 v) {
     float leng = sqrt(v.x * v.x + v.y * v.y);
     struct Vec2 res;
