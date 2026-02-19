@@ -1,0 +1,19 @@
+pacman -Syu
+
+pacman -Su
+
+pacman -S --needed \
+mingw-w64-x86_64-gcc \
+mingw-w64-x86_64-cmake \
+mingw-w64-x86_64-SDL2 \
+mingw-w64-x86_64-SDL2_image \
+mingw-w64-x86_64-SDL2_ttf \
+msys/vim
+
+cd 
+
+cmake -S . -B build -G "MinGW Makefiles"
+
+cmake --build build
+
+./build/bin/soccerengine.exe
