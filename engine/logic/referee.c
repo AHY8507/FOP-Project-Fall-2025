@@ -31,12 +31,12 @@ static int goal(float x, float y) {
     float upper_pole = CENTER_Y - (GOAL_HEIGHT / 2.00), lower_pole = CENTER_Y + (GOAL_HEIGHT / 2.00);
     float right_ball = x + BALL_RADIUS, left_ball = x - BALL_RADIUS;
     float right_team2_goal = PITCH_X + PITCH_W + GOAL_WIDTH, left_team1_goal = PITCH_X - GOAL_WIDTH;
-    if(y >= upper_pole && y <= lower_pole) {
-        if(right_ball >= right_team2_goal) { //(x + BALL_RADIUS <= PITCH_X) && (x - BALL_RADIUS >= PITCH_X - GOAL_WIDTH)
+    if((y - BALL_RADIUS) >= upper_pole && (y + BALL_RADIUS) <= lower_pole) {
+        if((right_ball <= PITCH_X) && (left_ball >= left_team1_goal)) { //right_ball >= right_team2_goal
             printf("GOAL! Right net hit at x:%.2f, y=%.2f\n", x, y);
             return 1;
         }
-        else if(left_ball <= left_team1_goal) { // (x - BALL_RADIUS >= PITCH_X + PITCH_W) && (x + BALL_RADIUS <= PITCH_X + PITCH_W + GOAL_WIDTH)
+        else if((left_ball >= PITCH_X + PITCH_W) && (right_ball <= right_team2_goal)) { // (left_ball >= PITCH_X + PITCH_W) && (right_ball <= right_team2_goal)left_ball <= left_team1_goal
             printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
             return 2;
         }
@@ -60,7 +60,13 @@ static bool out(float x, float y) {
     // TODO 2: implement this function
         // You must check for and print this EXACT log:
         // printf("Ball is out: x=%.2f, y=%.2f\n", x, y);
-    
+    if((x + BALL_RADIUS < PITCH_X) ||
+        (x - BALL_RADIUS > PITCH_W + PITCH_X) ||
+        (y - BALL_RADIUS > PITCH_H + PITCH_Y) ||
+        (y + BALL_RADIUS < PITCH_Y)) {
+            printf("Ball is out: x=%.2f, y=%.2f\n", x, y);
+            return true;
+        }
     return false; // for now
 }
 
