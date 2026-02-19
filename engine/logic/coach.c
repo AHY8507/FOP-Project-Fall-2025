@@ -71,7 +71,7 @@ void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -87,7 +87,7 @@ void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -103,7 +103,7 @@ void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -112,7 +112,7 @@ void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -121,7 +121,7 @@ void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -130,7 +130,7 @@ void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 
 /* Team 2 movement logic */
@@ -141,7 +141,7 @@ void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_1(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -157,7 +157,7 @@ void movement_logic_2_1(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -173,7 +173,7 @@ void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -182,7 +182,7 @@ void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -193,7 +193,7 @@ void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
 
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
@@ -204,7 +204,7 @@ void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
 
-    self->velocity = find_max_velocity(velo, self->talents.agility);
+    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 
 /* Team 1 shooting logic */
