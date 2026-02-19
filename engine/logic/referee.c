@@ -28,7 +28,19 @@ static int goal(float x, float y) {
         // You must check for and print these EXACT logs:
         // printf("GOAL! Right net hit at x:%.2f, y=%.2f\n", x, y);
         // printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
-
+    float upper_pole = CENTER_Y - (GOAL_HEIGHT / 2.00), lower_pole = CENTER_Y + (GOAL_HEIGHT / 2.00);
+    float right_ball = x + BALL_RADIUS, left_ball = x - BALL_RADIUS;
+    float right_team2_goal = PITCH_X + PITCH_W + GOAL_WIDTH, left_team1_goal = PITCH_X - GOAL_WIDTH;
+    if(y >= upper_pole && y <= lower_pole) {
+        if(right_ball >= right_team2_goal) { //(x + BALL_RADIUS <= PITCH_X) && (x - BALL_RADIUS >= PITCH_X - GOAL_WIDTH)
+            printf("GOAL! Right net hit at x:%.2f, y=%.2f\n", x, y);
+            return 1;
+        }
+        else if(left_ball <= left_team1_goal) { // (x - BALL_RADIUS >= PITCH_X + PITCH_W) && (x + BALL_RADIUS <= PITCH_X + PITCH_W + GOAL_WIDTH)
+            printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
+            return 2;
+        }
+    } // goal is a kind of out so in refree func we have to call goal before out
     return 0; // for now
 }
 
