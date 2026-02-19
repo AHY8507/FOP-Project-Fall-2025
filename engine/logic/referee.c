@@ -100,7 +100,7 @@ int referee(struct Scene* scene) {
     int team_out = out(ball->position.x, ball->position.y);
     if(team_goal == 1) {(scene->first_team->score) += 1; set_piece_goal(scene); return GOAL;}
     if(team_goal == 2) {(scene->second_team->score) += 1; set_piece_goal(scene); return GOAL;}
-    if(team_out) {set_piece_out(scene); return out;}
+    if(team_out) {set_piece_out(scene); return OUT;}
     return PLAY_ON;   // for now
 }
 
