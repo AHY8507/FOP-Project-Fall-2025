@@ -128,7 +128,8 @@ void verify_talents(struct Talents talents) {
     if(!(1 <= talents.defence && talents.defence <= MAX_TALENT_PER_SKILL &&
        1 <= talents.shooting && talents.shooting <= MAX_TALENT_PER_SKILL &&
        1 <= talents.agility &&  talents.agility <= MAX_TALENT_PER_SKILL &&
-       1 <= talents.dribbling && talents.dribbling <= MAX_TALENT_PER_SKILL)) 
+       1 <= talents.dribbling && talents.dribbling <= MAX_TALENT_PER_SKILL &&
+       1 <= sum && sum <= MAX_TALENT_PER_SKILL)) // as phase2 said
         printf("ERROR: Invalid talents! Values: defence=%d, agility=%d, dribbling=%d, shooting=%d, sum=%d\n",
         talents.defence, 
         talents.agility, 
@@ -219,7 +220,6 @@ void verify_shoot(struct Ball *ball, bool kickoff) {
         // printf(" ERROR: Demanding to shoot too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
         // printf(" ERROR: Demanding to shoot too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
         // printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
-    if(ball->possessor == NULL) return;
     struct Player* player = ball->possessor;
     float max_velocity = (player->talents.shooting / ((float)MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY; // first div then multi to avoid overflow
     if(ball->velocity.x > max_velocity || ball->velocity.x < -max_velocity) {
