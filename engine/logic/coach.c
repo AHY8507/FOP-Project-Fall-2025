@@ -144,22 +144,22 @@ PlayerLogicFn get_change_state_logic(int team, int kit) {
  * ------------------------------------------------------------------------- */
 /* Team 1 */
 static struct Talents team1_talents[6] = {
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
+    {3, 5, 1, 4}, // Attack1
+    {3, 5, 1, 4}, // Attack2
+    {4, 4, 1, 5}, // Attack3
+    {3, 1, 5, 1}, // Goaler
+    {4, 3, 3, 3}, // Haf1
+    {4, 3, 3, 3}, // Haf2
 };
 
 /* Team 2 */
 static struct Talents team2_talents[6] = {
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
+    {3, 5, 1, 4}, // Attack1
+    {3, 5, 1, 4}, // Attack2
+    {4, 4, 1, 5}, // Attack3
+    {3, 1, 5, 1}, // Goaler
+    {4, 3, 3, 3}, // Haf1
+    {4, 3, 3, 3}, // Haf2
 };
 
 struct Talents get_talents(int team, int kit) {
@@ -177,22 +177,22 @@ struct Talents get_talents(int team, int kit) {
  * ------------------------------------------------------------------------- */
 /* Team 1 */
 static struct Vec2 team1_positions[6] = {
-    {300, CENTER_Y},
-    {250, CENTER_Y-150},
-    {200, CENTER_Y-75},
-    {150, CENTER_Y},
-    {200, CENTER_Y+75},
-    {250, CENTER_Y+150},
+    {300, CENTER_Y}, // Attack
+    {350, CENTER_Y - 140}, // Attack
+    {350, CENTER_Y + 140}, // Attack
+    {80, CENTER_Y}, // Goal
+    {220, CENTER_Y - 100}, // Haff
+    {220, CENTER_Y + 100}, // Haff
 };
 
 /* Team 2 */
 static struct Vec2 team2_positions[6] = {
-    {750, CENTER_Y},
-    {800, CENTER_Y-150},
-    {850, CENTER_Y-75},
-    {900, CENTER_Y},
-    {850, CENTER_Y+75},
-    {800, CENTER_Y+150},
+    {SCREEN_WIDTH - 300, CENTER_Y}, // Attack
+    {SCREEN_WIDTH - 350, CENTER_Y - 140}, // Attack
+    {SCREEN_WIDTH - 350, CENTER_Y + 140}, // Attack
+    {SCREEN_WIDTH - 80, CENTER_Y}, // Goal
+    {SCREEN_WIDTH - 220, CENTER_Y - 100}, // Haff
+    {SCREEN_WIDTH - 220, CENTER_Y + 100}, // Haff
 };
 
 struct Vec2 get_positions(int team, int kit) {
