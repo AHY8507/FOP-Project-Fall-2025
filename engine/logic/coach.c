@@ -183,8 +183,30 @@ void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
     }
 }
 void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
+    struct Ball* ball = scene->ball;
+    struct Vec2 place;
+    if(ball->possessor != NULL && ball->possessor->team == self->team) {
+        place.x = ball->position.x + 60;
+        place.y = CENTER_Y - 120;
+    }
+    else {
+        place.x = ball->position.x;
+        place.y = ball->position.y - 30; 
+    }
+    fix_the_velo_in(self, place);
 }
 void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
+    struct Ball* ball = scene->ball;
+    struct Vec2 place;
+    if(ball->possessor != NULL && ball->possessor->team == self->team) {
+        place.x = ball->position.x + 60;
+        place.y = CENTER_Y + 120;
+    }
+    else {
+        place.x = ball->position.x;
+        place.y = ball->position.y + 30; 
+    }
+    fix_the_velo_in(self, place);
 }
 
 /* Team 2 movement logic */
@@ -318,9 +340,33 @@ void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
     }
 }
 void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
+    struct Ball* ball = scene->ball;
+    struct Vec2 place;
+    if(ball->possessor != NULL && ball->possessor->team == self->team) {
+        place.x = ball->position.x - 60;
+        place.y = CENTER_Y - 120;
+    }
+    else {
+        place.x = ball->position.x;
+        place.y = ball->position.y - 30;
+    }
+    fix_the_velo_in(self, place);
 }
+
 void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
+    struct Ball* ball = scene->ball;
+    struct Vec2 place;
+    if(ball->possessor != NULL && ball->possessor->team == self->team) {
+        place.x = ball->position.x - 60;
+        place.y = CENTER_Y + 120;
+    }
+    else {
+        place.x = ball->position.x;
+        place.y = ball->position.y + 30;
+    }
+    fix_the_velo_in(self, place);
 }
+
 
 /* Team 1 shooting logic */
 void shooting_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
