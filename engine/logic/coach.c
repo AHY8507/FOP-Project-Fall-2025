@@ -64,13 +64,13 @@ static struct Vec2 find_direction(struct Vec2 v) {
 }
 
 /* Team 1 movement logic */
-void movement_logic_1_3(struct Player *self, const struct Scene *scene) { // 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
+void movement_logic_1_0(struct Player *self, const struct Scene *scene) { // 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
 }
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
 }
-void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
+void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
 }
@@ -78,13 +78,13 @@ void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
 }
 
 /* Team 2 movement logic */
-void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
+void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_2_1(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
 }
-void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
+void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
 }
@@ -107,93 +107,51 @@ void shooting_logic_2_3(struct Player *self, const struct Scene *scene) { (void)
 void shooting_logic_2_4(struct Player *self, const struct Scene *scene) { (void)scene; }
 void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
 
+void change_state_logic_all_players(struct Player *self, const struct Scene *scene) {
+    int distance_getter;
+    switch(self->kit) {
+        case 0:
+            distance_getter = 25;
+            break;
+        case 1:
+            distance_getter = 40;
+            break;
+        case 2:
+            distance_getter = 40;
+            break;
+        case 3:
+            distance_getter = 40;
+            break;
+        case 4:
+            distance_getter = 30;
+            break;
+        case 5:
+            distance_getter = 30;
+            break;
+    }
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) self->state = SHOOTING;
+    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < distance_getter) self->state = INTERCEPTING;
+    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < distance_getter && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
+    else self->state = MOVING;
+}
+// 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
+
 /* Team 1 change_state logic */
-void change_state_logic_1_0(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_1_1(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_1_2(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_1_3(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_1_4(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_1_5(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
+void change_state_logic_1_0(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_1_1(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_1_2(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_1_3(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_1_4(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_1_5(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
 
 /* Team 2 change_state logic */
-void change_state_logic_2_0(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_2_1(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_2_2(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_2_3(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_2_4(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
-void change_state_logic_2_5(struct Player *self, const struct Scene *scene) {
-    struct Ball *ball = scene->ball;
-    if(ball->possessor == self) self->state = SHOOTING;
-    else if(ball->possessor == NULL && find_distance(ball->position, self->position) < 30) self->state = INTERCEPTING;
-    else if(ball->possessor != NULL && ball->possessor->team != self->team && find_distance(ball->position, self->position) < 30 && self->talents.dribbling > ball->possessor->talents.defence) self->state = INTERCEPTING;
-    else self->state = MOVING;
-}
+void change_state_logic_2_0(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_2_1(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_2_2(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_2_3(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_2_4(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
+void change_state_logic_2_5(struct Player *self, const struct Scene *scene) { change_state_logic_all_players(self, scene); }
 
 /* -------------------------------------------------------------------------
  * Lookup tables for factory
@@ -252,22 +210,34 @@ PlayerLogicFn get_change_state_logic(int team, int kit) {
  * ------------------------------------------------------------------------- */
 /* Team 1 */
 static struct Talents team1_talents[6] = {
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
+    // 0: middle half
+    {4, 6, 5, 4},
+    // 1: upper half
+    {4, 6, 5, 4},
+    // 2: lower half
+    {4, 6, 5, 4},
+    // 3: goalkeeper
+    {1, 8, 3, 4},
+    // 4: upper fighter
+    {7, 3, 6, 3},
+    // 5: lower fighter
+    {7, 3, 6, 3},
 };
 
 /* Team 2 */
 static struct Talents team2_talents[6] = {
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
-    {5, 5, 5, 5},
+    // 0: middle half
+    {4, 6, 5, 4},
+    // 1: upper half
+    {4, 6, 5, 4},
+    // 2: lower half
+    {4, 6, 5, 4},
+    // 3: goalkeeper
+    {1, 8, 3, 4},
+    // 4: upper fighter
+    {7, 3, 6, 3},
+    // 5: lower fighter
+    {7, 3, 6, 3},
 };
 
 struct Talents get_talents(int team, int kit) {
