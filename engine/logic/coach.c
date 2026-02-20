@@ -65,142 +65,30 @@ static struct Vec2 find_direction(struct Vec2 v) {
 
 /* Team 1 movement logic */
 void movement_logic_1_3(struct Player *self, const struct Scene *scene) { // 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
-    struct Vec2 place;
-    place.x = PITCH_MARGIN + 35;
-    place.y = scene->ball->position.y;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    struct Ball *ball = scene->ball;
-    if(ball->position.x < CENTER_X) {
-        place.x = (ball->position.x + PITCH_MARGIN) / 2.0f;
-        place.y = (ball->position.y + CENTER_Y - 120) / 2.0f;
-    }
-    else {
-        place.x = CENTER_X - 120;
-        place.y = CENTER_Y - 150;
-    }
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    struct Ball *ball = scene->ball;
-    if(ball->position.x < CENTER_X) {
-        place.x = (ball->position.x + PITCH_MARGIN) / 2.0f;
-        place.y = (ball->position.y + CENTER_Y + 120) / 2.0f;
-    }
-    else {
-        place.x = CENTER_X - 120;
-        place.y = CENTER_Y + 150;
-    }
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    place.x = scene->ball->position.x - 40;
-    place.y = scene->ball->position.y;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    place.x = scene->ball->position.x;
-    place.y = scene->ball->position.y - 20;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    place.x = scene->ball->position.x;
-    place.y = scene->ball->position.y + 20;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 
 /* Team 2 movement logic */
 void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    place.x = SCREEN_WIDTH - PITCH_MARGIN - 35;
-    place.y = scene->ball->position.y;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_1(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    struct Ball *ball = scene->ball;
-    if(ball->position.x > CENTER_X) {
-        place.x = (ball->position.x + (SCREEN_WIDTH - PITCH_MARGIN)) / 2.0f;
-        place.y = (ball->position.y + CENTER_Y - 120) / 2.0f;
-    }
-    else {
-        place.x = CENTER_X + 120;
-        place.y = CENTER_Y - 150;
-    }
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    struct Ball *ball = scene->ball;
-    if(ball->position.x > CENTER_X) {
-        place.x = (ball->position.x + (SCREEN_WIDTH - PITCH_MARGIN)) / 2.0f;
-        place.y = (ball->position.y + CENTER_Y - 120) / 2.0f;
-    }
-    else {
-        place.x = CENTER_X + 120;
-        place.y = CENTER_Y + 150;
-    }
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    place.x = scene->ball->position.x + 40;
-    place.y = scene->ball->position.y;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    place.x = scene->ball->position.x;
-    place.y = scene->ball->position.y - 20;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
-    struct Vec2 place;
-    place.x = scene->ball->position.x;
-    place.y = scene->ball->position.y + 20;
-    struct Vec2 velo;
-    velo.x = place.x - self->position.x;
-    velo.y = place.y - self->position.y;
-    self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 
 /* Team 1 shooting logic */
@@ -385,22 +273,22 @@ struct Talents get_talents(int team, int kit) {
  * ------------------------------------------------------------------------- */
 /* Team 1 */
 static struct Vec2 team1_positions[6] = {// 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
-    {250, CENTER_Y},
-    {320, CENTER_Y - 120},
-    {320, CENTER_Y + 120}, 
-    {90, CENTER_Y},
-    {420, CENTER_Y - 80}, 
-    {420, CENTER_Y + 80},
+    {200, CENTER_Y},
+    {250, CENTER_Y - 120},
+    {250, CENTER_Y + 120}, 
+    {70, CENTER_Y},
+    {350, CENTER_Y - 80}, 
+    {350, CENTER_Y + 80},
 };
 
 /* Team 2 */
 static struct Vec2 team2_positions[6] = {
-    {SCREEN_WIDTH - PITCH_MARGIN - 250, CENTER_Y},
-    {SCREEN_WIDTH - PITCH_MARGIN - 320, CENTER_Y - 120},
-    {SCREEN_WIDTH - PITCH_MARGIN - 320, CENTER_Y + 120},
-    {SCREEN_WIDTH - PITCH_MARGIN - 90, CENTER_Y},
-    {SCREEN_WIDTH - PITCH_MARGIN - 420, CENTER_Y - 80},
-    {SCREEN_WIDTH - PITCH_MARGIN - 420, CENTER_Y + 80},
+    {SCREEN_WIDTH - 200, CENTER_Y},
+    {SCREEN_WIDTH - 250, CENTER_Y - 120},
+    {SCREEN_WIDTH - 250, CENTER_Y + 120},
+    {SCREEN_WIDTH - 70, CENTER_Y},
+    {SCREEN_WIDTH - 350, CENTER_Y - 80},
+    {SCREEN_WIDTH - 350, CENTER_Y + 80},
 };
 
 struct Vec2 get_positions(int team, int kit) {
