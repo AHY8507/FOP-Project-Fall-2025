@@ -63,14 +63,38 @@ static struct Vec2 find_direction(struct Vec2 v) {
     return res;
 }
 
+void fix_the_velo_in(struct Player *self, struct Vec2 v1) {
+    struct Vec2 res;
+    res.x = v1.x - self->position.x;
+    res.y = v1.y - self->position.y;
+    self->velocity = find_max_velocity(res, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
+}
+
 /* Team 1 movement logic */
 void movement_logic_1_0(struct Player *self, const struct Scene *scene) { // 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
+
 }
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
+    struct Ball* ball = scene->ball;
+    if(ball->position.x > CENTER_X) {
+        struct Vec2 place;
+        place.x = 70; place.y = CENTER_Y;
+        fix_the_velo_in(self, place);
+    }
+    else if(ball->position.x <= 200) {
+        struct Vec2 place;
+        place.x = ball->position.x; place.y = ball->position.y;
+        fix_the_velo_in(self, place);
+    }
+    else {
+        struct Vec2 place;
+        place.x = 70; place.y = ball->position.y;
+        fix_the_velo_in(self, place);
+    }
 }
 void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
 }
@@ -85,6 +109,22 @@ void movement_logic_2_1(struct Player *self, const struct Scene *scene) {
 void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
+    struct Ball* ball = scene->ball;
+    if(ball->position.x < CENTER_X) {
+        struct Vec2 place;
+        place.x = SCREEN_WIDTH - 70; place.y = CENTER_Y;
+        fix_the_velo_in(self, place);
+    }
+    else if(ball->position.x >= SCREEN_WIDTH - 200) {
+        struct Vec2 place;
+        place.x = ball->position.x; place.y = ball->position.y;
+        fix_the_velo_in(self, place);
+    }
+    else {
+        struct Vec2 place;
+        place.x = SCREEN_WIDTH - 70; place.y = ball->position.y;
+        fix_the_velo_in(self, place);
+    }
 }
 void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
 }
