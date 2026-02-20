@@ -11,7 +11,7 @@
 
 // Set to false to let the other team use their own logic (if you implement it)
 // Set to true to test your logic on both teams
-bool coach_both_teams = true;
+bool coach_both_teams = false;
 
 /* -------------------------------------------------------------------------
  * Logic Functions
@@ -64,7 +64,7 @@ static struct Vec2 find_direction(struct Vec2 v) {
 }
 
 /* Team 1 movement logic */
-void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
+void movement_logic_1_3(struct Player *self, const struct Scene *scene) { // 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
     struct Vec2 place;
     place.x = PITCH_MARGIN + 35;
     place.y = scene->ball->position.y;
@@ -105,7 +105,7 @@ void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
     velo.y = place.y - self->position.y;
     self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
-void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
+void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
     place.x = scene->ball->position.x - 40;
     place.y = scene->ball->position.y;
@@ -134,7 +134,7 @@ void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
 }
 
 /* Team 2 movement logic */
-void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
+void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
     place.x = SCREEN_WIDTH - PITCH_MARGIN - 35;
     place.y = scene->ball->position.y;
@@ -175,7 +175,7 @@ void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
     velo.y = place.y - self->position.y;
     self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
-void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
+void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
     place.x = scene->ball->position.x + 40;
     place.y = scene->ball->position.y;
@@ -188,22 +188,18 @@ void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
     place.x = scene->ball->position.x;
     place.y = scene->ball->position.y - 20;
-
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-
     self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
     place.x = scene->ball->position.x;
     place.y = scene->ball->position.y + 20;
-
     struct Vec2 velo;
     velo.x = place.x - self->position.x;
     velo.y = place.y - self->position.y;
-
     self->velocity = find_max_velocity(velo, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 
@@ -388,23 +384,23 @@ struct Talents get_talents(int team, int kit) {
  *             be placed at the center of the pitch.
  * ------------------------------------------------------------------------- */
 /* Team 1 */
-static struct Vec2 team1_positions[6] = {
-    {300, CENTER_Y},
-    {250, CENTER_Y-150},
-    {200, CENTER_Y-75},
-    {150, CENTER_Y},
-    {200, CENTER_Y+75},
-    {250, CENTER_Y+150},
+static struct Vec2 team1_positions[6] = {// 3:goal keeper - 1:upper haf - 2:lower haf - 0:middle haf - 4:upper fighter - 5:lower fighter
+    {250, CENTER_Y},
+    {320, CENTER_Y - 120},
+    {320, CENTER_Y + 120}, 
+    {90, CENTER_Y},
+    {420, CENTER_Y - 80}, 
+    {420, CENTER_Y + 80},
 };
 
 /* Team 2 */
 static struct Vec2 team2_positions[6] = {
-    {750, CENTER_Y},
-    {800, CENTER_Y-150},
-    {850, CENTER_Y-75},
-    {900, CENTER_Y},
-    {850, CENTER_Y+75},
-    {800, CENTER_Y+150},
+    {SCREEN_WIDTH - PITCH_MARGIN - 250, CENTER_Y},
+    {SCREEN_WIDTH - PITCH_MARGIN - 320, CENTER_Y - 120},
+    {SCREEN_WIDTH - PITCH_MARGIN - 320, CENTER_Y + 120},
+    {SCREEN_WIDTH - PITCH_MARGIN - 90, CENTER_Y},
+    {SCREEN_WIDTH - PITCH_MARGIN - 420, CENTER_Y - 80},
+    {SCREEN_WIDTH - PITCH_MARGIN - 420, CENTER_Y + 80},
 };
 
 struct Vec2 get_positions(int team, int kit) {

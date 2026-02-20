@@ -65,7 +65,7 @@ void update_ball_possessor(struct Scene* scene) {
         if (p1 && p1->state == INTERCEPTING && is_colliding(p1, ball))
             tackle(p1, ball);
 
-        if (p2 && p1->state == INTERCEPTING && is_colliding(p2, ball))
+        if (p2 && p2->state == INTERCEPTING && is_colliding(p2, ball))
             tackle(p2, ball);
     }
 }
