@@ -63,11 +63,11 @@ static struct Vec2 find_direction(struct Vec2 v) {
     return res;
 }
 
-void fix_the_velo_in(struct Player *self, struct Vec2 v1) {
+static void fix_the_velo_in(struct Player *self, struct Vec2 v1,  const struct Scene *scene) {
     struct Vec2 res;
     res.x = v1.x - self->position.x;
     res.y = v1.y - self->position.y;
-    self->velocity = find_max_velocity(res, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
+    self->velocity = find_max_velocity(res, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);;
 }
 
 /* Team 1 movement logic */
@@ -77,29 +77,29 @@ void movement_logic_1_0(struct Player *self, const struct Scene *scene) { // 3:g
         if(ball->possessor->team == self->team) {
             struct Vec2 place;
             place.x = 250; place.y = CENTER_Y;
-            fix_the_velo_in(self, place);
+            fix_the_velo_in(self, place, scene);
             return;
         }
     }
-    if(ball->position.x > CENTER_X) {
+    if(ball->position.x > CENTER_X - 50) {
         struct Vec2 place;
         place.x = 250; place.y = CENTER_Y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y < (SCREEN_HEIGHT / 3.0f)) {
         struct Vec2 place;
         place.x = ball->position.x; place.y = (SCREEN_HEIGHT / 3.0f);
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y >= (SCREEN_HEIGHT / 3.0f) && ball->position.y <= ((SCREEN_HEIGHT / 3.0f) * 2.0f)){
         struct Vec2 place;
         place.x = ball->position.x - 20; place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y > ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x; place.y = (SCREEN_HEIGHT / 3.0f) * 2.0f;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
@@ -108,29 +108,29 @@ void movement_logic_1_1(struct Player *self, const struct Scene *scene) {
         if(ball->possessor->team == self->team) {
             struct Vec2 place;
             place.x = 250; place.y = CENTER_Y - 220;
-            fix_the_velo_in(self, place);
+            fix_the_velo_in(self, place, scene);
             return;
         }
     }
-    if(ball->position.x > CENTER_X) {
+    if(ball->position.x > CENTER_X - 50) {
         struct Vec2 place;
         place.x = 250; place.y = CENTER_Y - 220;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y < (SCREEN_HEIGHT / 3.0f)) {
         struct Vec2 place;
         place.x = ball->position.x - 20; place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y >= (SCREEN_HEIGHT / 3.0f) && ball->position.y <= ((SCREEN_HEIGHT / 3.0f) * 2.0f)){
         struct Vec2 place;
         place.x = ball->position.x; place.y = (SCREEN_HEIGHT / 3.0f);
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y > ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x; place.y = (SCREEN_HEIGHT / 3.0f);
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
@@ -139,29 +139,29 @@ void movement_logic_1_2(struct Player *self, const struct Scene *scene) {
         if(ball->possessor->team == self->team) {
             struct Vec2 place;
             place.x = 250; place.y = CENTER_Y + 220;
-            fix_the_velo_in(self, place);
+            fix_the_velo_in(self, place, scene);
             return;
         }
     }
-    if(ball->position.x > CENTER_X) {
+    if(ball->position.x > CENTER_X - 50) {
         struct Vec2 place;
         place.x = 250; place.y = CENTER_Y + 220;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y < (SCREEN_HEIGHT / 3.0f)) {
         struct Vec2 place;
         place.x = ball->position.x; place.y = (SCREEN_HEIGHT / 3.0f) * 2.0f;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y >= (SCREEN_HEIGHT / 3.0f) && ball->position.y <= ((SCREEN_HEIGHT / 3.0f) * 2.0f)){
         struct Vec2 place;
         place.x = ball->position.x; place.y = (SCREEN_HEIGHT / 3.0f) * 2.0f;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y > ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x - 20; place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
@@ -169,17 +169,17 @@ void movement_logic_1_3(struct Player *self, const struct Scene *scene) {
     if(ball->position.x > CENTER_X) {
         struct Vec2 place;
         place.x = 70; place.y = CENTER_Y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.x <= 200) {
         struct Vec2 place;
         place.x = ball->position.x; place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else {
         struct Vec2 place;
         place.x = 70; place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
@@ -193,7 +193,7 @@ void movement_logic_1_4(struct Player *self, const struct Scene *scene) {
         place.x = ball->position.x;
         place.y = ball->position.y - 30; 
     }
-    fix_the_velo_in(self, place);
+    fix_the_velo_in(self, place, scene);
 }
 void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
     struct Ball* ball = scene->ball;
@@ -206,7 +206,7 @@ void movement_logic_1_5(struct Player *self, const struct Scene *scene) {
         place.x = ball->position.x;
         place.y = ball->position.y + 30; 
     }
-    fix_the_velo_in(self, place);
+    fix_the_velo_in(self, place, scene);
 }
 
 /* Team 2 movement logic */
@@ -217,33 +217,33 @@ void movement_logic_2_0(struct Player *self, const struct Scene *scene) {
             struct Vec2 place;
             place.x = SCREEN_WIDTH - 250;
             place.y = CENTER_Y;
-            fix_the_velo_in(self, place);
+            fix_the_velo_in(self, place, scene);
             return;
         }
     }
-    if(ball->position.x < CENTER_X) {
+    if(ball->position.x < CENTER_X + 50) {
         struct Vec2 place;
         place.x = SCREEN_WIDTH - 250;
         place.y = CENTER_Y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y < (SCREEN_HEIGHT / 3.0f)) {
         struct Vec2 place;
         place.x = ball->position.x;
         place.y = (SCREEN_HEIGHT / 3.0f);
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y >= (SCREEN_HEIGHT / 3.0f) && ball->position.y <= ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x + 20;
         place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y > ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x;
         place.y = (SCREEN_HEIGHT / 3.0f) * 2.0f;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 
@@ -254,33 +254,33 @@ void movement_logic_2_1(struct Player *self, const struct Scene *scene) {
             struct Vec2 place;
             place.x = SCREEN_WIDTH - 250;
             place.y = CENTER_Y - 220;
-            fix_the_velo_in(self, place);
+            fix_the_velo_in(self, place, scene);
             return;
         }
     }
-    if(ball->position.x < CENTER_X) {
+    if(ball->position.x < CENTER_X + 50) {
         struct Vec2 place;
         place.x = SCREEN_WIDTH - 250;
         place.y = CENTER_Y - 220;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y < (SCREEN_HEIGHT / 3.0f)) {
         struct Vec2 place;
         place.x = ball->position.x + 20;
         place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y >= (SCREEN_HEIGHT / 3.0f) && ball->position.y <= ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x;
         place.y = (SCREEN_HEIGHT / 3.0f);
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y > ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x;
         place.y = (SCREEN_HEIGHT / 3.0f);
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 
@@ -291,33 +291,33 @@ void movement_logic_2_2(struct Player *self, const struct Scene *scene) {
             struct Vec2 place;
             place.x = SCREEN_WIDTH - 250;
             place.y = CENTER_Y + 220;
-            fix_the_velo_in(self, place);
+            fix_the_velo_in(self, place, scene);
             return;
         }
     }
-    if(ball->position.x < CENTER_X) {
+    if(ball->position.x < CENTER_X + 50) {
         struct Vec2 place;
         place.x = SCREEN_WIDTH - 250;
         place.y = CENTER_Y + 220;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y < (SCREEN_HEIGHT / 3.0f)) {
         struct Vec2 place;
         place.x = ball->position.x;
         place.y = (SCREEN_HEIGHT / 3.0f) * 2.0f;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y >= (SCREEN_HEIGHT / 3.0f) && ball->position.y <= ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x;
         place.y = (SCREEN_HEIGHT / 3.0f) * 2.0f;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.y > ((SCREEN_HEIGHT / 3.0f) * 2.0f)) {
         struct Vec2 place;
         place.x = ball->position.x + 20;
         place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 
@@ -326,17 +326,17 @@ void movement_logic_2_3(struct Player *self, const struct Scene *scene) {
     if(ball->position.x < CENTER_X) {
         struct Vec2 place;
         place.x = SCREEN_WIDTH - 70; place.y = CENTER_Y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else if(ball->position.x >= SCREEN_WIDTH - 200) {
         struct Vec2 place;
         place.x = ball->position.x; place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
     else {
         struct Vec2 place;
         place.x = SCREEN_WIDTH - 70; place.y = ball->position.y;
-        fix_the_velo_in(self, place);
+        fix_the_velo_in(self, place, scene);
     }
 }
 void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
@@ -350,7 +350,7 @@ void movement_logic_2_4(struct Player *self, const struct Scene *scene) {
         place.x = ball->position.x;
         place.y = ball->position.y - 30;
     }
-    fix_the_velo_in(self, place);
+    fix_the_velo_in(self, place, scene);
 }
 
 void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
@@ -364,7 +364,7 @@ void movement_logic_2_5(struct Player *self, const struct Scene *scene) {
         place.x = ball->position.x;
         place.y = ball->position.y + 30;
     }
-    fix_the_velo_in(self, place);
+    fix_the_velo_in(self, place, scene);
 }
 
 
