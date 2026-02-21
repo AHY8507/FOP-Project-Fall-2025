@@ -48,10 +48,10 @@ static bool is_goaler(struct Player *player) { return player->kit == 3; }
 static bool is_haff(struct Player *player) { return (player->kit == 5 || player->kit == 4); }
 static bool is_attacker(struct Player *player) { return (player->kit == 0 || player->kit == 1 || player->kit == 2); }
 static bool near_opponent_goal(struct Player *self, const struct Scene *scene){
-    if(self->team == scene->first_team) return (SCREEN_WIDTH - self->position.x) < 250;
+    if(self->team == 1) return (SCREEN_WIDTH - self->position.x) < 250;
     else return self->position.x < 250;
 }
-static bool is_first_team(struct Player *self, const struct Scene *scene) { return self->team == scene->first_team; }
+static bool is_first_team(struct Player *self, const struct Scene *scene) { return self->team == 1; }
 static bool ball_in_our_half(struct Player *self, const struct Scene *scene) {
     if(is_first_team(self, scene)) return scene->ball->position.x < SCREEN_WIDTH / 2;
     else return scene->ball->position.x > SCREEN_WIDTH / 2;
@@ -97,7 +97,7 @@ static void movement_haf(struct Player *self, const struct Scene *scene) {
     else if(ball_in_our_half(self, scene)) fix_the_velo_in(self, ball->position);
     else fix_the_velo_in(self, haf_base_pos(self, scene));
 }
-static float attacker__y(struct Player *self) {
+static float attacker_y(struct Player *self) {
     if(self->kit == 0) return SCREEN_HEIGHT * 0.3f;
     if(self->kit == 1) return SCREEN_HEIGHT * 0.5f;
     return SCREEN_HEIGHT * 0.7f;
@@ -106,7 +106,7 @@ static struct Vec2 attacker_base_pos(struct Player *self, const struct Scene *sc
     struct Vec2 player;
     if(is_first_team(self, scene)) player.x = SCREEN_WIDTH * 0.6f;
     else player.x = SCREEN_WIDTH * 0.4f;
-    player.y = attacker_lane_y(self);
+    player.y = attacker_y(self);
     return player;
 }
 static void movement_attacker(struct Player *self, const struct Scene *scene) {
@@ -128,7 +128,7 @@ static void movement_attacker(struct Player *self, const struct Scene *scene) {
 }
 void movement_logic_general(struct Player *self, const struct Scene *scene) {
     if(is_goaler(self)) movement_goaler(self, scene);
-    else if(is_haff(self)) movement_haff(self, scene);
+    else if(is_haff(self)) movement_haf(self, scene);
     else if(is_attacker(self)) movement_attacker(self, scene);
 }
 
