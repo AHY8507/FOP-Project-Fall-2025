@@ -39,6 +39,12 @@ bool coach_both_teams = true;
  * Thank you for your attention to this matter!
  * ------------------------------------------------------------------------- */
 
+// my funcs
+static float find_distance(struct Vec2 v1, struct Vec2 v2) {
+    float dx = fabs(v1.x - v2.x), dy = fabs(v1.y - v2.y);
+    return sqrt(dx * dx + dy * dy);
+}
+
 /* Team 1 movement logic */
 void movement_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) { (void)scene; }
@@ -72,20 +78,45 @@ void shooting_logic_2_4(struct Player *self, const struct Scene *scene) { (void)
 void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
 
 /* Team 1 change_state logic */
-void change_state_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_1_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+bool goal_near(struct Player *self, const struct Scene *scene) {
+    if(self->team == scene->first_team) {
+        if(SCREEN_WIDTH - self->position.x < 250 && fabs(CENTER_Y - self->position.y) < 150) return true;
+        else return false;
+    }
+    if(self->position.x < 250 && fabs(CENTER_Y - self->position.y) < 150) return true;
+    else return false;
+}
+bool found_teammate_pass(struct Player *self, const struct Scene *scene) {
+
+}
+void change_state_logic_general(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    float distance = find_distance(self->position, ball->position);
+    if(ball->possessor != NULL && ball->possessor == self) {
+        if(goal_near(self, scene) || found_teammate_pass(self, scene)) self->state = SHOOTING;
+        else self->state = MOVING;
+        return;
+    }
+    if(ball->possessor != NULL && ball->possessor->team != self->team) {
+        if(distance <= 30) self->state = INTERCEPTING;
+        else self->state = MOVING;
+    } else self->state = MOVING;
+}
+
+void change_state_logic_1_0(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_1_1(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_1_2(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_1_3(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_1_4(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_1_5(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
 
 /* Team 2 change_state logic */
-void change_state_logic_2_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void change_state_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void change_state_logic_2_0(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_2_1(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_2_2(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_2_3(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_2_4(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
+void change_state_logic_2_5(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
 
 /* -------------------------------------------------------------------------
  * Lookup tables for factory
