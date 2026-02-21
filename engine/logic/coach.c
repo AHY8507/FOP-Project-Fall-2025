@@ -11,7 +11,7 @@
 
 // Set to false to let the other team use their own logic (if you implement it)
 // Set to true to test your logic on both teams
-bool coach_both_teams = true;
+bool coach_both_teams = false;
 
 /* -------------------------------------------------------------------------
  * Logic Functions
