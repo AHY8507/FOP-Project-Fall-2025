@@ -39,10 +39,17 @@ bool coach_both_teams = false;
  * Thank you for your attention to this matter!
  * ------------------------------------------------------------------------- */
 
-// my funcs
-static float find_distance(struct Vec2 v1, struct Vec2 v2) {
+/*MY GENERAL FUNCS*/
+static float find_distance(struct Vec2 v1, struct Vec2 v2){
     float dx = fabs(v1.x - v2.x), dy = fabs(v1.y - v2.y);
-    return sqrt(dx * dx + dy * dy);
+    return sqrtf(dx * dx + dy * dy);
+}
+static bool is_goaler(struct Player *player) { return player->kit == 3; }
+static bool is_haff(struct Player *player) { return (player->kit == 5 || player->kit == 4); }
+static bool is_attacker(struct Player *player) { return (player->kit == 0 || player->kit == 1 || player->kit == 2); }
+static bool near_opponent_goal(struct Player *self, const struct Scene *scene){
+    if(self->team == scene->first_team) return (SCREEN_WIDTH - self->position.x) < 250;
+    else return self->position.x < 250;
 }
 
 /* Team 1 movement logic */
@@ -77,32 +84,33 @@ void shooting_logic_2_3(struct Player *self, const struct Scene *scene) { (void)
 void shooting_logic_2_4(struct Player *self, const struct Scene *scene) { (void)scene; }
 void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
 
-/* Team 1 change_state logic */
-bool goal_near(struct Player *self, const struct Scene *scene) {
-    if(self->team == scene->first_team) {
-        if(SCREEN_WIDTH - self->position.x < 250 && fabs(CENTER_Y - self->position.y) < 150) return true;
-        else return false;
-    }
-    if(self->position.x < 250 && fabs(CENTER_Y - self->position.y) < 150) return true;
-    else return false;
-}
-bool found_teammate_pass(struct Player *self, const struct Scene *scene) {
-
-}
+/* GENERAL CHANGE STATE LOGIC*/
 void change_state_logic_general(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     float distance = find_distance(self->position, ball->position);
-    if(ball->possessor != NULL && ball->possessor == self) {
-        if(goal_near(self, scene) || found_teammate_pass(self, scene)) self->state = SHOOTING;
+    if(is_goaler(self)) {
+        if(ball->possessor == self) self->state = SHOOTING;
+        else if(ball->possessor != self && distance <= 20) { //distance for goaler
+            if(ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) self->state = INTERCEPTING;
+            else self->state = MOVING;
+        }
         else self->state = MOVING;
-        return;
     }
-    if(ball->possessor != NULL && ball->possessor->team != self->team) {
-        if(distance <= 30) self->state = INTERCEPTING;
+    else if(is_haff(self)) {
+        if(ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) {
+            if(distance < 50) self->state = INTERCEPTING;
+            else self->state = MOVING;
+        }
+        else if(ball->possessor == self) self->state = SHOOTING;
         else self->state = MOVING;
-    } else self->state = MOVING;
+    }
+    else if(is_attacker(self)) {
+        if(ball->possessor == self && near_opponent_goal(self, scene)) self->state = SHOOTING;
+        else self->state = MOVING;
+    }
 }
 
+/* Team 1 change_state logic */
 void change_state_logic_1_0(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
 void change_state_logic_1_1(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
 void change_state_logic_1_2(struct Player *self, const struct Scene *scene) { change_state_logic_general(self, scene); }
