@@ -51,22 +51,102 @@ static bool near_opponent_goal(struct Player *self, const struct Scene *scene){
     if(self->team == scene->first_team) return (SCREEN_WIDTH - self->position.x) < 250;
     else return self->position.x < 250;
 }
+static bool is_first_team(struct Player *self, const struct Scene *scene) { return self->team == scene->first_team; }
+static bool ball_in_our_half(struct Player *self, const struct Scene *scene) {
+    if(is_first_team(self, scene)) return scene->ball->position.x < SCREEN_WIDTH / 2;
+    else return scene->ball->position.x > SCREEN_WIDTH / 2;
+}
+static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
+    float leng = sqrt(v.x * v.x + v.y * v.y);
+    struct Vec2 res; 
+    res.x = v.x;
+    res.y = v.y;
+    if(leng > maxi) { res.x /= leng;res.x *= maxi; res.y /= leng;res.y *= maxi; }
+    return res;
+} 
+static void fix_the_velo_in(struct Player *self, struct Vec2 v1) {
+    struct Vec2 res;
+    res.x = v1.x - self->position.x;
+    res.y = v1.y - self->position.y;
+    self->velocity = find_max_velocity(res, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);;
+}
+/* GENERAL MOVEMENT LOGIC*/
+static void movement_goaler(struct Player *self, const struct Scene *scene) {
+    struct Vec2 place;
+    if(is_first_team(self, scene)) { place.x = 80; place.y = CENTER_Y;}
+    else { place.x = SCREEN_WIDTH - 80; place.y = CENTER_Y; }
+    if(ball_in_our_half(self, scene)) place.y =  scene->ball->position.y;
+    fix_the_velo_in(self, place);
+}
+static struct Vec2 haf_base_pos(struct Player *self, const struct Scene *scene) {
+    struct Vec2 player;
+    if(is_first_team(self, scene)) player.x = 220;
+    else player.x = SCREEN_WIDTH - 220;
+    if(self->kit == 4) player.y = CENTER_Y - 100;
+    else player.y = CENTER_Y + 100;
+    return player;
+}
+
+static void movement_haf(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    if(ball->possessor == self) {
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+    } 
+    else if(ball->possessor != NULL && ball->possessor->team == self->team) fix_the_velo_in(self, haf_base_pos(self, scene));
+    else if(ball_in_our_half(self, scene)) fix_the_velo_in(self, ball->position);
+    else fix_the_velo_in(self, haf_base_pos(self, scene));
+}
+static float attacker__y(struct Player *self) {
+    if(self->kit == 0) return SCREEN_HEIGHT * 0.3f;
+    if(self->kit == 1) return SCREEN_HEIGHT * 0.5f;
+    return SCREEN_HEIGHT * 0.7f;
+}
+static struct Vec2 attacker_base_pos(struct Player *self, const struct Scene *scene) {
+    struct Vec2 player;
+    if(is_first_team(self, scene)) player.x = SCREEN_WIDTH * 0.6f;
+    else player.x = SCREEN_WIDTH * 0.4f;
+    player.y = attacker_lane_y(self);
+    return player;
+}
+static void movement_attacker(struct Player *self, const struct Scene *scene) {
+    struct Ball *ball = scene->ball;
+    struct Vec2 place;
+    if(ball->possessor != NULL && ball->possessor->team != self->team) {
+        place = attacker_base_pos(self, scene);
+        fix_the_velo_in(self, place);
+    }
+    else if(ball->possessor != NULL && ball->possessor->team == self->team) {
+        if(!is_attacker(ball->possessor)) fix_the_velo_in(self, ball->possessor->position);
+        else {
+            place.x = ball->position.x;
+            place.y = self->position.y;
+            fix_the_velo_in(self, place);
+        }
+    }
+    else fix_the_velo_in(self, attacker_base_pos(self, scene));
+}
+void movement_logic_general(struct Player *self, const struct Scene *scene) {
+    if(is_goaler(self)) movement_goaler(self, scene);
+    else if(is_haff(self)) movement_haff(self, scene);
+    else if(is_attacker(self)) movement_attacker(self, scene);
+}
 
 /* Team 1 movement logic */
-void movement_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_1_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void movement_logic_1_0(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_1_1(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_1_2(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_1_3(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_1_4(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_1_5(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
 
 /* Team 2 movement logic */
-void movement_logic_2_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void movement_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void movement_logic_2_0(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_2_1(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_2_2(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_2_3(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_2_4(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
+void movement_logic_2_5(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
 
 /* Team 1 shooting logic */
 void shooting_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
