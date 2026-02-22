@@ -105,8 +105,8 @@ static float attacker_y(struct Player *self) {
 }
 static struct Vec2 attacker_base_pos(struct Player *self) {
     struct Vec2 player;
-    if(is_first_team(self)) player.x = SCREEN_WIDTH * 0.6f;
-    else player.x = SCREEN_WIDTH * 0.4f;
+    if(is_first_team(self)) player.x = SCREEN_WIDTH * 0.54f;
+    else player.x = SCREEN_WIDTH * 0.46f;
     player.y = attacker_y(self);
     return player;
 }
@@ -249,6 +249,10 @@ void change_state_logic_general(struct Player *self, const struct Scene *scene) 
     }
     else if(is_attacker(self)) {
         if(ball->possessor == self && near_opponent_goal(self)) self->state = SHOOTING;
+        else if(ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) {
+            if(distance < 50) self->state = INTERCEPTING;
+            else self->state = MOVING;
+        }
         else self->state = MOVING;
     }
 }
@@ -325,23 +329,23 @@ PlayerLogicFn get_change_state_logic(int team, int kit) {
  *  TODO 2: Replace these default values with your desired skill points.
  * ------------------------------------------------------------------------- */
 /* Team 1 */
-static struct Talents team1_talents[6] = {
-    {3, 5, 1, 4}, // Attack1
-    {3, 5, 1, 4}, // Attack2
-    {4, 4, 1, 5}, // Attack3
-    {3, 1, 5, 1}, // Goaler
-    {4, 3, 3, 3}, // Haf1
-    {4, 3, 3, 3}, // Haf2
+static struct Talents team1_talents[6] = { // defence , agility , dribbling , shooting
+    {1, 8, 1, 10}, // Attack1
+    {1, 8, 1, 10}, // Attack2
+    {2, 8, 1, 9}, // Attack3
+    {3, 5, 5, 7}, // Goaler
+    {3, 7, 2, 7}, // Haf1
+    {3, 7, 2, 7}, // Haf2
 };
 
 /* Team 2 */
 static struct Talents team2_talents[6] = {
-    {3, 5, 1, 4}, // Attack1
-    {3, 5, 1, 4}, // Attack2
-    {4, 4, 1, 5}, // Attack3
-    {3, 1, 5, 1}, // Goaler
-    {4, 3, 3, 3}, // Haf1
-    {4, 3, 3, 3}, // Haf2
+    {1, 8, 1, 10}, // Attack1
+    {1, 8, 1, 10}, // Attack2
+    {2, 8, 1, 9}, // Attack3
+    {3, 5, 5, 7}, // Goaler
+    {3, 7, 2, 7}, // Haf1
+    {3, 7, 2, 7}, // Haf2
 };
 
 struct Talents get_talents(int team, int kit) {

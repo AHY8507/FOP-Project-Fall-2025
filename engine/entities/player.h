@@ -29,7 +29,7 @@ typedef enum PlayerActionState {
  * An int in range 1 to MAX_TALENT_PER_SKILL.
  * defence, agility, dribbling, shooting.
  */
-struct Talents {
+struct Talents { // defence , agility , dribbling , shooting
     int defence;    /**< tackle success probability */
     int agility;    /**< how fast the player can move */
     int dribbling;  /**< opponent's tackle failure probability */
