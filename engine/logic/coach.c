@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <time.h>
 
 // Set to false to let the other team use their own logic (if you implement it)
 // Set to true to test your logic on both teams
@@ -47,13 +48,13 @@ static float find_distance(struct Vec2 v1, struct Vec2 v2){
 static bool is_goaler(struct Player *player) { return player->kit == 3; }
 static bool is_haff(struct Player *player) { return (player->kit == 5 || player->kit == 4); }
 static bool is_attacker(struct Player *player) { return (player->kit == 0 || player->kit == 1 || player->kit == 2); }
-static bool near_opponent_goal(struct Player *self, const struct Scene *scene){
+static bool near_opponent_goal(struct Player *self){
     if(self->team == 1) return (SCREEN_WIDTH - self->position.x) < 250;
     else return self->position.x < 250;
 }
-static bool is_first_team(struct Player *self, const struct Scene *scene) { return self->team == 1; }
+static bool is_first_team(struct Player *self) { return self->team == 1; }
 static bool ball_in_our_half(struct Player *self, const struct Scene *scene) {
-    if(is_first_team(self, scene)) return scene->ball->position.x < SCREEN_WIDTH / 2;
+    if(is_first_team(self)) return scene->ball->position.x < SCREEN_WIDTH / 2;
     else return scene->ball->position.x > SCREEN_WIDTH / 2;
 }
 static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
@@ -68,19 +69,19 @@ static void fix_the_velo_in(struct Player *self, struct Vec2 v1) {
     struct Vec2 res;
     res.x = v1.x - self->position.x;
     res.y = v1.y - self->position.y;
-    self->velocity = find_max_velocity(res, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);;
+    self->velocity = find_max_velocity(res, (self->talents.agility / ((float)MAX_TALENT_PER_SKILL)) * MAX_PLAYER_VELOCITY);
 }
 /* GENERAL MOVEMENT LOGIC*/
 static void movement_goaler(struct Player *self, const struct Scene *scene) {
     struct Vec2 place;
-    if(is_first_team(self, scene)) { place.x = 80; place.y = CENTER_Y;}
+    if(is_first_team(self)) { place.x = 80; place.y = CENTER_Y;}
     else { place.x = SCREEN_WIDTH - 80; place.y = CENTER_Y; }
     if(ball_in_our_half(self, scene)) place.y =  scene->ball->position.y;
     fix_the_velo_in(self, place);
 }
-static struct Vec2 haf_base_pos(struct Player *self, const struct Scene *scene) {
+static struct Vec2 haf_base_pos(struct Player *self) {
     struct Vec2 player;
-    if(is_first_team(self, scene)) player.x = 220;
+    if(is_first_team(self)) player.x = 220;
     else player.x = SCREEN_WIDTH - 220;
     if(self->kit == 4) player.y = CENTER_Y - 100;
     else player.y = CENTER_Y + 100;
@@ -93,18 +94,18 @@ static void movement_haf(struct Player *self, const struct Scene *scene) {
         self->velocity.x = 0;
         self->velocity.y = 0;
     } 
-    else if(ball->possessor != NULL && ball->possessor->team == self->team) fix_the_velo_in(self, haf_base_pos(self, scene));
+    else if(ball->possessor != NULL && ball->possessor->team == self->team) fix_the_velo_in(self, haf_base_pos(self));
     else if(ball_in_our_half(self, scene)) fix_the_velo_in(self, ball->position);
-    else fix_the_velo_in(self, haf_base_pos(self, scene));
+    else fix_the_velo_in(self, haf_base_pos(self));
 }
 static float attacker_y(struct Player *self) {
     if(self->kit == 0) return SCREEN_HEIGHT * 0.3f;
     if(self->kit == 1) return SCREEN_HEIGHT * 0.5f;
     return SCREEN_HEIGHT * 0.7f;
 }
-static struct Vec2 attacker_base_pos(struct Player *self, const struct Scene *scene) {
+static struct Vec2 attacker_base_pos(struct Player *self) {
     struct Vec2 player;
-    if(is_first_team(self, scene)) player.x = SCREEN_WIDTH * 0.6f;
+    if(is_first_team(self)) player.x = SCREEN_WIDTH * 0.6f;
     else player.x = SCREEN_WIDTH * 0.4f;
     player.y = attacker_y(self);
     return player;
@@ -113,7 +114,7 @@ static void movement_attacker(struct Player *self, const struct Scene *scene) {
     struct Ball *ball = scene->ball;
     struct Vec2 place;
     if(ball->possessor != NULL && ball->possessor->team != self->team) {
-        place = attacker_base_pos(self, scene);
+        place = attacker_base_pos(self);
         fix_the_velo_in(self, place);
     }
     else if(ball->possessor != NULL && ball->possessor->team == self->team) {
@@ -124,7 +125,7 @@ static void movement_attacker(struct Player *self, const struct Scene *scene) {
             fix_the_velo_in(self, place);
         }
     }
-    else fix_the_velo_in(self, attacker_base_pos(self, scene));
+    else fix_the_velo_in(self, attacker_base_pos(self));
 }
 void movement_logic_general(struct Player *self, const struct Scene *scene) {
     if(is_goaler(self)) movement_goaler(self, scene);
@@ -148,21 +149,83 @@ void movement_logic_2_3(struct Player *self, const struct Scene *scene) { moveme
 void movement_logic_2_4(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
 void movement_logic_2_5(struct Player *self, const struct Scene *scene) { movement_logic_general(self, scene); }
 
+/* GENERAL SHOOTING LOGIC*/
+static struct Player *nearest_attacker(const struct Scene *scene, const struct Player *self) {
+    struct Player *best = NULL;
+    float best_dist = 1e9;
+    if(self->team == 1) {
+        for(int i = 0; i < 6; i++) {
+            struct Player *player = scene->first_team->players[i];
+            if(!is_attacker(player)) continue;
+            if(player == self) continue;
+            float distance = find_distance(self->position, player->position);
+            if(distance <= best_dist) { best_dist = distance; best = player; }
+        }
+    }
+    else {
+        for(int i = 0; i < 6; i++) {
+            struct Player *player = scene->second_team->players[i];
+            if(!is_attacker(player)) continue;
+            if(player == self) continue;
+            float distance = find_distance(self->position, player->position);
+            if(distance <= best_dist) { best_dist = distance; best = player; }
+        }
+    }
+    return best;
+}
+static struct Player *random_attacker(const struct Scene *scene, int team) {
+    struct Player *list[6];
+    int cnt = 0;
+    if(team == 1){
+        for(int i = 0; i < 6; i++){
+            struct Player *player = scene->first_team->players[i];
+            if(is_attacker(player)) list[cnt++] = player;
+        }
+    }
+    else{
+        for(int i = 0; i < 6; i++){
+            struct Player *player = scene->second_team->players[i];
+            if(is_attacker(player)) list[cnt++] = player;
+        }
+    }
+    srand(time(NULL));
+    return list[rand() % cnt];
+}
+static struct Vec2 opponent_goal_pos(const struct Scene *scene, const struct Player *self) {
+    struct Vec2 goal;
+    if(self->team == 0) { goal.x = scene->field.width; goal.y = scene->field.height / 2; }
+    else { goal.x = 0; goal.y = scene->field.height / 2; }
+    return goal;
+}
+void fix_the_velo_in_ball(const struct Scene *scene, struct Player *self, struct Vec2 v1) {
+    struct Ball *ball = scene->ball;
+    struct Vec2 res;
+    res.x = v1.x - ball->position.x;
+    res.y = v1.y - ball->position.y;
+    ball->velocity = find_max_velocity(res, (self->talents.shooting / ((float)MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY);
+}
+void shooting_logic_global(struct Player *self, const struct Scene *scene) {
+    if(is_goaler(self)) fix_the_velo_in_ball(scene, self, random_attacker(scene, self->team)->position);
+    else if(is_haff(self)) fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
+    else fix_the_velo_in_ball(scene, self, opponent_goal_pos(scene, self));
+}
+
+
 /* Team 1 shooting logic */
-void shooting_logic_1_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_1_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_1_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_1_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_1_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_1_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void shooting_logic_1_0(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_1_1(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_1_2(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_1_3(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_1_4(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_1_5(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
 
 /* Team 2 shooting logic */
-void shooting_logic_2_0(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_2_1(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_2_2(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_2_3(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_2_4(struct Player *self, const struct Scene *scene) { (void)scene; }
-void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { (void)scene; }
+void shooting_logic_2_0(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_2_1(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_2_2(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_2_3(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_2_4(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
+void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { shooting_logic_global(self, scene); }
 
 /* GENERAL CHANGE STATE LOGIC*/
 void change_state_logic_general(struct Player *self, const struct Scene *scene) {
@@ -185,7 +248,7 @@ void change_state_logic_general(struct Player *self, const struct Scene *scene) 
         else self->state = MOVING;
     }
     else if(is_attacker(self)) {
-        if(ball->possessor == self && near_opponent_goal(self, scene)) self->state = SHOOTING;
+        if(ball->possessor == self && near_opponent_goal(self)) self->state = SHOOTING;
         else self->state = MOVING;
     }
 }
