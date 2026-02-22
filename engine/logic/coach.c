@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
-#include <time.h>
 
 // Set to false to let the other team use their own logic (if you implement it)
 // Set to true to test your logic on both teams
 bool coach_both_teams = false;
-
+unsigned int scores[2] = {10000, 10000};
+int starting_game = 0;
 /* -------------------------------------------------------------------------
  * Logic Functions
  *  TODO 1: You must implement the following functions in Phase 2.
@@ -41,6 +41,7 @@ bool coach_both_teams = false;
  * ------------------------------------------------------------------------- */
 
 /*MY GENERAL FUNCS*/
+static void update_scores(const struct Scene *scene) { scores[0] = scene->first_team->score; scores[1] = scene->second_team->score; }
 static float find_distance(struct Vec2 v1, struct Vec2 v2){
     float dx = fabs(v1.x - v2.x), dy = fabs(v1.y - v2.y);
     return sqrtf(dx * dx + dy * dy);
@@ -173,24 +174,6 @@ static struct Player *nearest_attacker(const struct Scene *scene, const struct P
     }
     return best;
 }
-static struct Player *random_attacker(const struct Scene *scene, int team) {
-    struct Player *list[6];
-    int cnt = 0;
-    if(team == 1){
-        for(int i = 0; i < 6; i++){
-            struct Player *player = scene->first_team->players[i];
-            if(is_attacker(player)) list[cnt++] = player;
-        }
-    }
-    else{
-        for(int i = 0; i < 6; i++){
-            struct Player *player = scene->second_team->players[i];
-            if(is_attacker(player)) list[cnt++] = player;
-        }
-    }
-    srand(time(NULL));
-    return list[rand() % cnt];
-}
 static struct Vec2 opponent_goal_pos(const struct Scene *scene, const struct Player *self) {
     struct Vec2 goal;
     if(self->team == 0) { goal.x = scene->field.width; goal.y = scene->field.height / 2; }
@@ -205,7 +188,11 @@ void fix_the_velo_in_ball(const struct Scene *scene, struct Player *self, struct
     ball->velocity = find_max_velocity(res, (self->talents.shooting / ((float)MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY);
 }
 void shooting_logic_global(struct Player *self, const struct Scene *scene) {
-    if(is_goaler(self)) fix_the_velo_in_ball(scene, self, random_attacker(scene, self->team)->position);
+    if(starting_game == 2) {
+        fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
+        return;
+    }
+    if(is_goaler(self)) fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
     else if(is_haff(self)) fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
     else fix_the_velo_in_ball(scene, self, opponent_goal_pos(scene, self));
 }
@@ -229,6 +216,19 @@ void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { shooti
 
 /* GENERAL CHANGE STATE LOGIC*/
 void change_state_logic_general(struct Player *self, const struct Scene *scene) {
+    if(scores[0] != scene->first_team->score || scores[1] != scene->second_team->score) { 
+        if(find_distance(self->position, scene->ball->position) < 30.0f){
+            self->state = INTERCEPTING;
+            update_scores(scene);
+            starting_game = 1;
+        }
+        return;
+    }
+    if(starting_game == 1) {
+        self->state = SHOOTING;
+        starting_game = 2;
+        return;
+    }
     struct Ball *ball = scene->ball;
     float distance = find_distance(self->position, ball->position);
     if(is_goaler(self)) {
