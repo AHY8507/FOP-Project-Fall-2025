@@ -185,7 +185,7 @@ void fix_the_velo_in_ball(const struct Scene *scene, struct Player *self, struct
     struct Vec2 res;
     res.x = v1.x - ball->position.x;
     res.y = v1.y - ball->position.y;
-    ball->velocity = find_max_velocity(res, (self->talents.shooting / ((float)MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY);
+    ball->velocity = find_max_velocity(res, ((float)(self->talents.shooting) / (MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY);
 }
 void shooting_logic_global(struct Player *self, const struct Scene *scene) {
     if(starting_game == 2) {
@@ -219,6 +219,7 @@ void change_state_logic_general(struct Player *self, const struct Scene *scene) 
     if(scores[0] != scene->first_team->score || scores[1] != scene->second_team->score) { 
         if(find_distance(self->position, scene->ball->position) < 30.0f){
             self->state = INTERCEPTING;
+            // printf("%d %d\n", self->kit, self->team);
             update_scores(scene);
             starting_game = 1;
         }
