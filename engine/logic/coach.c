@@ -12,6 +12,8 @@
 // Set to false to let the other team use their own logic (if you implement it)
 // Set to true to test your logic on both teams
 bool coach_both_teams = false;
+// Mine VARS
+struct Player* ball_last_shooter = NULL;
 unsigned int scores[2] = {10000, 10000};
 int starting_game = 0;
 /* -------------------------------------------------------------------------
@@ -65,7 +67,7 @@ static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
     res.y = v.y;
     if(leng > maxi) { res.x /= leng;res.x *= maxi; res.y /= leng;res.y *= maxi; }
     return res;
-} 
+}
 static void fix_the_velo_in(struct Player *self, struct Vec2 v1) {
     struct Vec2 res;
     res.x = v1.x - self->position.x;
@@ -181,15 +183,18 @@ static struct Vec2 opponent_goal_pos(const struct Scene *scene, const struct Pla
     return goal;
 }
 void fix_the_velo_in_ball(const struct Scene *scene, struct Player *self, struct Vec2 v1) {
-    struct Ball *ball = scene->ball;
     struct Vec2 res;
-    res.x = v1.x - ball->position.x;
-    res.y = v1.y - ball->position.y;
-    ball->velocity = find_max_velocity(res, ((float)(self->talents.shooting) / (MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY);
+    res.x = v1.x - scene->ball->position.x;
+    res.y = v1.y - scene->ball->position.y;
+    scene->ball->velocity = find_max_velocity(res, ((float)(self->talents.shooting) / (MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY);
 }
 void shooting_logic_global(struct Player *self, const struct Scene *scene) {
-    if(starting_game == 2) {
+    if(starting_game == 2 && scene->ball->possessor == self) {
+        starting_game = 0;
+        printf("the owner of the ball: %d, %d\n", self->team, self->kit);
+        printf("the attacker of the ball: %d, %d\n", nearest_attacker(scene, self)->team, nearest_attacker(scene, self)->kit);
         fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
+        printf("velocity.x %f .y %f\n", scene->ball->velocity.x, scene->ball->velocity.y);
         return;
     }
     if(is_goaler(self)) fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
@@ -217,40 +222,39 @@ void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { shooti
 /* GENERAL CHANGE STATE LOGIC*/
 void change_state_logic_general(struct Player *self, const struct Scene *scene) {
     if(scores[0] != scene->first_team->score || scores[1] != scene->second_team->score) { 
-        if(find_distance(self->position, scene->ball->position) < 30.0f){
-            self->state = INTERCEPTING;
-            // printf("%d %d\n", self->kit, self->team);
-            update_scores(scene);
-            starting_game = 1;
-        }
+        self->state = INTERCEPTING;
+        // printf("%d %d\n", self->kit, self->team);
+        update_scores(scene);
+        starting_game = 1;
         return;
     }
-    if(starting_game == 1) {
+    if(starting_game == 1 && self == scene->ball->possessor) {
         self->state = SHOOTING;
+        ball_last_shooter = self;
         starting_game = 2;
         return;
     }
     struct Ball *ball = scene->ball;
     float distance = find_distance(self->position, ball->position);
     if(is_goaler(self)) {
-        if(ball->possessor == self) self->state = SHOOTING;
+        if(ball->possessor == self) { self->state = SHOOTING; ball_last_shooter = self; }
         else if(ball->possessor != self && distance <= 20) { //distance for goaler
-            if(ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) self->state = INTERCEPTING;
+            if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) self->state = INTERCEPTING;
             else self->state = MOVING;
         }
         else self->state = MOVING;
     }
     else if(is_haff(self)) {
-        if(ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) {
+        if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
             if(distance < 50) self->state = INTERCEPTING;
             else self->state = MOVING;
         }
-        else if(ball->possessor == self) self->state = SHOOTING;
+        else if(ball->possessor == self) { self->state = SHOOTING; ball_last_shooter = self; }
         else self->state = MOVING;
     }
     else if(is_attacker(self)) {
-        if(ball->possessor == self && near_opponent_goal(self)) self->state = SHOOTING;
-        else if(ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) {
+        if(ball->possessor == self && near_opponent_goal(self)) { self->state = SHOOTING; ball_last_shooter = self; }
+        else if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
             if(distance < 50) self->state = INTERCEPTING;
             else self->state = MOVING;
         }
