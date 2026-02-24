@@ -231,6 +231,7 @@ void verify_shoot(struct Ball *ball, bool kickoff) {
         ball->velocity.y = ((ball->velocity.y > 0)? max_velocity : -max_velocity);
     }
     if(kickoff) {
+        printf("ball velo x : %f\n", ball->velocity.x);
         if((player->team == 1 && ball->velocity.x > 0) || (player->team == 2 && ball->velocity.x < 0)){
             printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
         }
