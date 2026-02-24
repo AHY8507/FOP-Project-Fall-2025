@@ -32,7 +32,7 @@ void update_team(struct Scene* scene, struct Team* team) {
                 case IDLE:
                     player->velocity.x = 0.0f;
                     player->velocity.y = 0.0f;
-                    if(player == ball->possessor) {
+                    if (player == ball->possessor) {
                         ball->velocity.x = 0.0f;
                         ball->velocity.y = 0.0f;
                     }
