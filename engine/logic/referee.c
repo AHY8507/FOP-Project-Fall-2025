@@ -221,6 +221,7 @@ void verify_shoot(struct Ball *ball, bool kickoff) {
         // printf(" ERROR: Demanding to shoot too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
         // printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
     struct Player* player = ball->possessor;
+    if(player == NULL) return;
     float max_velocity = (player->talents.shooting / ((float)MAX_TALENT_PER_SKILL)) * MAX_BALL_VELOCITY; // first div then multi to avoid overflow
     if(ball->velocity.x > max_velocity || ball->velocity.x < -max_velocity) {
         printf(" ERROR: Demanding to shoot too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
@@ -230,8 +231,8 @@ void verify_shoot(struct Ball *ball, bool kickoff) {
         printf(" ERROR: Demanding to shoot too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
         ball->velocity.y = ((ball->velocity.y > 0)? max_velocity : -max_velocity);
     }
-    if(kickoff) {
-        printf("ball velo x : %f\n", ball->velocity.x);
+    if(kickoff && player->state == SHOOTING) {
+        // printf("ball velo x : %f , team: %d\n", ball->velocity.x,ball->possessor->team);
         if((player->team == 1 && ball->velocity.x > 0) || (player->team == 2 && ball->velocity.x < 0)){
             printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
         }
