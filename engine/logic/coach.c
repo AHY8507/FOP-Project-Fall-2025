@@ -287,11 +287,18 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
         can_move = false;
         // printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
         // printf("ball pos: x %f, y %f\n", scene->ball->position.x, scene->ball->position.y);
-        if(find_distance(scene->ball->position, self->position) < 50) {
+        // if(find_distance(scene->ball->position, self->position) < 50) {
+        //     printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
+        //     self->state = INTERCEPTING;
+        //     // printf("%d %d\n", self->kit, self->team);
+        //     update_scores(scene);
+        //     starting_game = 1;
+        // }
+        if(self == scene->first_team->players[0] || self == scene->second_team->players[0]) {
             printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
             self->state = INTERCEPTING;
             // printf("%d %d\n", self->kit, self->team);
-            update_scores(scene);
+            if(self == scene->second_team->players[0]) update_scores(scene);
             starting_game = 1;
         }
         return;
