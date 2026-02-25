@@ -72,7 +72,6 @@ static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
     res.x = v.x;
     res.y = v.y;
     if(leng > maxi) { res.x /= leng;res.x *= maxi; res.y /= leng;res.y *= maxi; }
-    // printf("max velo x:%f, y:%f\n", res.x, res.y);
     return res;
 }
 static void fix_the_velo_in(struct Player *self, struct Vec2 v1) {
@@ -237,18 +236,9 @@ void shooting_logic_global(struct Player *self, struct Scene *scene) {
     
     if(starting_game == 2) {
         if(scene->ball->possessor == self) {
-            // printf("Hello\n");
             starting_game = 0;
-            // printf("the owner of the ball: %d, %d\n", self->team, self->kit);
-            // printf("the attacker of the ball: %d, %d\n", nearest_attacker(scene, self)->team, nearest_attacker(scene, self)->kit);
             struct Player *player = random_attacker(scene, self);
-            // printf("random player x=%f , y=%f", player->position.x, player->position.y);
             fix_the_velo_in_ball(scene, self, player->position);
-            // if(scene->ball->possessor->team == 1)
-            //     scene->ball->velocity.x = 300;
-            // else
-            //     scene->ball->velocity.x = -300;
-            // printf("velocity.x %f .y %f\n", scene->ball->velocity.x, scene->ball->velocity.y);
             can_move = true;
         }
         return;
@@ -258,7 +248,6 @@ void shooting_logic_global(struct Player *self, struct Scene *scene) {
     else{
         struct Vec2 place = opponent_goal_pos(scene, self);
         int tmp1 = rand() % 2, tmp2 = rand() % 100;
-        // printf("%d %d\n", tmp1, tmp2);
         place.y += pow(-1, tmp1) * tmp2;
         fix_the_velo_in_ball(scene, self, place);
     }
@@ -285,26 +274,14 @@ void shooting_logic_2_5(struct Player *self, struct Scene *scene) { shooting_log
 void change_state_logic_general(struct Player *self, struct Scene *scene) {
     if(scores[0] != scene->first_team->score || scores[1] != scene->second_team->score) { 
         can_move = false;
-        // printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
-        // printf("ball pos: x %f, y %f\n", scene->ball->position.x, scene->ball->position.y);
-        // if(find_distance(scene->ball->position, self->position) < 50) {
-        //     printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
-        //     self->state = INTERCEPTING;
-        //     // printf("%d %d\n", self->kit, self->team);
-        //     update_scores(scene);
-        //     starting_game = 1;
-        // }
         if(self == scene->first_team->players[0] || self == scene->second_team->players[0]) {
-            printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
             self->state = INTERCEPTING;
-            // printf("%d %d\n", self->kit, self->team);
             if(self == scene->second_team->players[0]) update_scores(scene);
             starting_game = 1;
         }
         return;
     }
     if(starting_game == 1 && self == scene->ball->possessor) {
-        // printf("%d %d\n", self->kit, self->team);
         self->state = SHOOTING;
         ball_last_shooter = self;
         starting_game = 2;
@@ -317,7 +294,6 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
         else if(ball->possessor != self && distance <= 20) { //distance for goaler
             if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
                 self->state = INTERCEPTING;
-                // printf("player team %d kit %d\n", self->team, self->kit);
             }
             else self->state = MOVING;
         }
@@ -327,7 +303,6 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
         if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
             if(distance < 50) {
                 self->state = INTERCEPTING;
-                // printf("player team %d kit %d\n", self->team, self->kit);
             }
             else self->state = MOVING;
         }
@@ -339,7 +314,6 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
         else if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
             if(distance < 50) {
                 self->state = INTERCEPTING;
-                // printf("player team %d kit %d\n", self->team, self->kit);
             }
             else self->state = MOVING;
         }

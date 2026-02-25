@@ -98,9 +98,9 @@ int referee(struct Scene* scene) {
     struct Ball* ball = scene->ball;
     int team_goal = goal(ball->position.x, ball->position.y);
     int team_out = out(ball->position.x, ball->position.y);
-    if(team_goal == 1) {(scene->first_team->score) += 1; set_piece_goal(scene); return GOAL;}
-    if(team_goal == 2) {(scene->second_team->score) += 1; set_piece_goal(scene); return GOAL;}
-    if(team_out) {set_piece_out(scene); return OUT;}
+    if(team_goal == 1) {(scene->first_team->score) += 1; return GOAL;}
+    if(team_goal == 2) {(scene->second_team->score) += 1; return GOAL;}
+    if(team_out) { return OUT;}
     return PLAY_ON;   // for now
 }
 
