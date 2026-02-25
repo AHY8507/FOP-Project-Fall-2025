@@ -156,10 +156,10 @@ static void movement_goaler(struct Player *self, struct Scene *scene) {
     if(self->team == 1) { place.x = 80; place.y = CENTER_Y;}
     else { place.x = SCREEN_WIDTH - 80; place.y = CENTER_Y; }
     if(ball_in_our_half(self, scene)) {
-        if(scene->ball->position.y < CENTER_Y + 100 && scene->ball->position.y > CENTER_Y - 100) place.y =  scene->ball->position.y;
+        if(scene->ball->position.y < CENTER_Y + 80 && scene->ball->position.y > CENTER_Y - 80) place.y =  scene->ball->position.y;
         else{
-            if(scene->ball->position.y >= CENTER_Y + 100) place.y = CENTER_Y + 100;
-            else place.y = CENTER_Y - 100;
+            if(scene->ball->position.y >= CENTER_Y + 80) place.y = CENTER_Y + 80;
+            else place.y = CENTER_Y - 80;
         }
     }
     fix_the_velo_in(self, place);
@@ -180,6 +180,8 @@ static void movement_haff(struct Player *self, struct Scene *scene) {
             struct Vec2 place;
             place.x = (ball->position.x + self->position.x) / 2;
             place.y = (ball->position.y + self->position.y) / 2;
+            if(self->team == 1) place.x -= 40;
+            else place.x += 40;
             fix_the_velo_in(self, place);
         }
     }
@@ -291,7 +293,7 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
     float distance = find_distance(self->position, ball->position);
     if(is_goaler(self)) {
         if(ball->possessor == self) { self->state = SHOOTING; ball_last_shooter = self; }
-        else if(ball->possessor != self && distance <= 20) { //distance for goaler
+        else if(ball->possessor != self && distance <= 24) { //distance for goaler
             if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
                 self->state = INTERCEPTING;
             }
@@ -300,6 +302,13 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
         else self->state = MOVING;
     }
     else if(is_haff(self)) {
+        if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter == self) {
+            if(distance < 10) {
+                self->state = INTERCEPTING;
+                return;
+            }
+            else{ self->state = MOVING; return; }
+        }
         if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
             if(distance < 50) {
                 self->state = INTERCEPTING;
