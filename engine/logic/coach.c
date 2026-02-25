@@ -303,14 +303,14 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
     }
     else if(is_haff(self)) {
         if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter == self) {
-            if(distance < 10) {
+            if(distance < 7) {
                 self->state = INTERCEPTING;
                 return;
             }
             else{ self->state = MOVING; return; }
         }
         if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
-            if(distance < 50) {
+            if(distance < 40) {
                 self->state = INTERCEPTING;
             }
             else self->state = MOVING;
