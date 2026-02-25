@@ -178,7 +178,13 @@ static void movement_goaler(struct Player *self, struct Scene *scene) {
     struct Vec2 place;
     if(self->team == 1) { place.x = 80; place.y = CENTER_Y;}
     else { place.x = SCREEN_WIDTH - 80; place.y = CENTER_Y; }
-    if(ball_in_our_half(self, scene)) place.y =  scene->ball->position.y;
+    if(ball_in_our_half(self, scene)) {
+        if(scene->ball->position.y < CENTER_Y + 100 && scene->ball->position.y > CENTER_Y - 100) place.y =  scene->ball->position.y;
+        else{
+            if(scene->ball->position.y >= CENTER_Y + 100) place.y = CENTER_Y + 100;
+            else place.y = CENTER_Y - 100;
+        }
+    }
     fix_the_velo_in(self, place);
 }
 
@@ -253,7 +259,11 @@ void shooting_logic_global(struct Player *self, struct Scene *scene) {
         starting_game = 0;
         // printf("the owner of the ball: %d, %d\n", self->team, self->kit);
         // printf("the attacker of the ball: %d, %d\n", nearest_attacker(scene, self)->team, nearest_attacker(scene, self)->kit);
-        fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
+        //fix_the_velo_in_ball(scene, self, nearest_attacker(scene, self)->position);
+        if(scene->ball->possessor->team == 1)
+            scene->ball->velocity.x = -300;
+        else
+            scene->ball->velocity.x = 300;
         // printf("velocity.x %f .y %f\n", scene->ball->velocity.x, scene->ball->velocity.y);
         return;
     }
