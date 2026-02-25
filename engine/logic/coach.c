@@ -143,7 +143,27 @@ static struct Player *nearest_haff(struct Scene *scene, struct Player *self) {
     }
     return best;
 }
-
+static struct Player *nearest_player(struct Scene *scene, struct Player *self) {
+    struct Player *best = NULL;
+    float best_dist = 1e9;
+    if(self->team == 1) {
+        for(int i = 0; i < 6; i++) {
+            struct Player *player = scene->first_team->players[i];
+            if(player == self) continue;
+            float distance = find_distance(self->position, player->position);
+            if(distance <= best_dist) { best_dist = distance; best = player; }
+        }
+    }
+    else {
+        for(int i = 0; i < 6; i++) {
+            struct Player *player = scene->second_team->players[i];
+            if(player == self) continue;
+            float distance = find_distance(self->position, player->position);
+            if(distance <= best_dist) { best_dist = distance; best = player; }
+        }
+    }
+    return best;
+}
 void fix_the_velo_in_ball(struct Scene *scene, struct Player *self, struct Vec2 v1) {
     struct Vec2 res;
     res.x = v1.x - scene->ball->position.x;
@@ -235,7 +255,14 @@ void movement_logic_2_5(struct Player *self, struct Scene *scene) { movement_log
 
 /* GENERAL SHOOTING LOGIC*/
 void shooting_logic_global(struct Player *self, struct Scene *scene) {
-    
+    if((self->position.x - BALL_RADIUS < PITCH_X) ||
+        (self->position.x + BALL_RADIUS > PITCH_W + PITCH_X) ||
+        (self->position.y + BALL_RADIUS > PITCH_H + PITCH_Y) ||
+        (self->position.y - BALL_RADIUS < PITCH_Y)) {
+        struct Player *player = nearest_player(scene, self);
+        fix_the_velo_in_ball(scene, self, player->position);
+        return;
+    }
     if(starting_game == 2) {
         if(scene->ball->possessor == self) {
             starting_game = 0;
@@ -274,6 +301,10 @@ void shooting_logic_2_5(struct Player *self, struct Scene *scene) { shooting_log
 
 /* GENERAL CHANGE STATE LOGIC*/
 void change_state_logic_general(struct Player *self, struct Scene *scene) {
+    if((self->position.x - BALL_RADIUS < PITCH_X) ||
+        (self->position.x + BALL_RADIUS > PITCH_W + PITCH_X) ||
+        (self->position.y + BALL_RADIUS > PITCH_H + PITCH_Y) ||
+        (self->position.y - BALL_RADIUS < PITCH_Y)) self->state = INTERCEPTING;
     if(scores[0] != scene->first_team->score || scores[1] != scene->second_team->score) { 
         can_move = false;
         if(self == scene->first_team->players[0] || self == scene->second_team->players[0]) {
