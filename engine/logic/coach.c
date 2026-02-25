@@ -285,20 +285,19 @@ void shooting_logic_2_5(struct Player *self, struct Scene *scene) { shooting_log
 void change_state_logic_general(struct Player *self, struct Scene *scene) {
     if(scores[0] != scene->first_team->score || scores[1] != scene->second_team->score) { 
         can_move = false;
-        // printf("self pos: x %f, y %f\n", self->position.x, self->position.y);
+        // printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
         // printf("ball pos: x %f, y %f\n", scene->ball->position.x, scene->ball->position.y);
         if(find_distance(scene->ball->position, self->position) < 50) {
+            printf("self pos: x %f, y %f\nteam:%d , kit:%d\n", self->position.x, self->position.y, self->team, self->kit);
             self->state = INTERCEPTING;
-            printf("Hello1\n");
-            printf("%d %d\n", self->kit, self->team);
+            // printf("%d %d\n", self->kit, self->team);
             update_scores(scene);
             starting_game = 1;
         }
         return;
     }
     if(starting_game == 1 && self == scene->ball->possessor) {
-        printf("%d %d\n", self->kit, self->team);
-        printf("Hello2\n");
+        // printf("%d %d\n", self->kit, self->team);
         self->state = SHOOTING;
         ball_last_shooter = self;
         starting_game = 2;
