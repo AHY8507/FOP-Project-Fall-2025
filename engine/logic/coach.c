@@ -62,9 +62,8 @@ static bool near_opponent_goal(struct Player *self){
     if(self->team == 1) return (SCREEN_WIDTH - self->position.x) < 250;
     else return self->position.x < 250;
 }
-static bool is_first_team(struct Player *self) { return self->team == 1; }
 static bool ball_in_our_half(struct Player *self, struct Scene *scene) {
-    if(is_first_team(self)) return scene->ball->position.x < SCREEN_WIDTH / 2;
+    if(self->team == 1) return scene->ball->position.x < SCREEN_WIDTH / 2;
     else return scene->ball->position.x > SCREEN_WIDTH / 2;
 }
 static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
@@ -83,7 +82,7 @@ static void fix_the_velo_in(struct Player *self, struct Vec2 v1) {
 }
 static struct Vec2 haf_base_pos(struct Player *self) {
     struct Vec2 player;
-    if(is_first_team(self)) player.x = 220;
+    if(self->team == 1) player.x = 220;
     else player.x = SCREEN_WIDTH - 220;
     if(self->kit == 4) player.y = CENTER_Y - 100;
     else player.y = CENTER_Y + 100;
@@ -96,7 +95,7 @@ static float attacker_y(struct Player *self) {
 }
 static struct Vec2 attacker_base_pos(struct Player *self) {
     struct Vec2 player;
-    if(is_first_team(self)) player.x = SCREEN_WIDTH * 0.54f;
+    if(self->team == 1) player.x = SCREEN_WIDTH * 0.54f;
     else player.x = SCREEN_WIDTH * 0.46f;
     player.y = attacker_y(self);
     return player;
@@ -144,7 +143,6 @@ static struct Player *random_attacker(struct Scene *scene, struct Player *self) 
 
     return attackers[rand() % count];
 }
-
 static struct Player *nearest_haf(struct Scene *scene, struct Player *self) {
     struct Player *best = NULL;
     float best_dist = 1e9;
@@ -178,7 +176,7 @@ void fix_the_velo_in_ball(struct Scene *scene, struct Player *self, struct Vec2 
 /* GENERAL MOVEMENT LOGIC*/
 static void movement_goaler(struct Player *self, struct Scene *scene) {
     struct Vec2 place;
-    if(is_first_team(self)) { place.x = 80; place.y = CENTER_Y;}
+    if(self->team == 1) { place.x = 80; place.y = CENTER_Y;}
     else { place.x = SCREEN_WIDTH - 80; place.y = CENTER_Y; }
     if(ball_in_our_half(self, scene)) place.y =  scene->ball->position.y;
     fix_the_velo_in(self, place);
