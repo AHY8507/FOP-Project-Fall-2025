@@ -30,13 +30,12 @@ static int goal(float x, float y) {
         // printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
     float upper_pole = CENTER_Y - (GOAL_HEIGHT / 2.00), lower_pole = CENTER_Y + (GOAL_HEIGHT / 2.00);
     float right_ball = x + BALL_RADIUS, left_ball = x - BALL_RADIUS;
-    float right_team2_goal = PITCH_X + PITCH_W + GOAL_WIDTH, left_team1_goal = PITCH_X - GOAL_WIDTH;
     if((y - BALL_RADIUS) > upper_pole && (y + BALL_RADIUS) < lower_pole) {
-        if((right_ball < PITCH_X) && (left_ball > left_team1_goal)) {
+        if(right_ball < PITCH_X) {
             printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
             return 2;
         }
-        else if((left_ball > PITCH_X + PITCH_W) && (right_ball < right_team2_goal)) {
+        else if(left_ball > SCREEN_WIDTH - PITCH_MARGIN) {
             printf("GOAL! Right net hit at x:%.2f, y=%.2f\n", x, y);
             return 1;
         }
