@@ -143,6 +143,20 @@ static struct Player *nearest_haff(struct Scene *scene, struct Player *self) {
     }
     return best;
 }
+static struct Vec2 find_out(struct Player *self, int ud) {
+    struct Vec2 out_pos;
+    if(self->team == 1) {
+        out_pos.x = self->position.x + 100;
+        if(ud == 0) out_pos.y = 0;
+        else out_pos.y = SCREEN_WIDTH; 
+    }
+    else {
+        out_pos.x = self->position.x - 100;
+        if(ud == 0) out_pos.y = 0;
+        else out_pos.y = SCREEN_WIDTH; 
+    }
+    return out_pos;
+}
 static struct Player *nearest_player(struct Scene *scene, struct Player *self) {
     struct Player *best = NULL;
     float best_dist = 1e9;
@@ -255,10 +269,10 @@ void movement_logic_2_5(struct Player *self, struct Scene *scene) { movement_log
 
 /* GENERAL SHOOTING LOGIC*/
 void shooting_logic_global(struct Player *self, struct Scene *scene) {
-    if((self->position.x - BALL_RADIUS < PITCH_X) ||
+    if(((self->position.x - BALL_RADIUS < PITCH_X) ||
         (self->position.x + BALL_RADIUS > PITCH_W + PITCH_X) ||
         (self->position.y + BALL_RADIUS > PITCH_H + PITCH_Y) ||
-        (self->position.y - BALL_RADIUS < PITCH_Y)) {
+        (self->position.y - BALL_RADIUS < PITCH_Y)) && scene->ball->possessor == self) {
         struct Player *player = nearest_player(scene, self);
         fix_the_velo_in_ball(scene, self, player->position);
         return;
@@ -273,7 +287,19 @@ void shooting_logic_global(struct Player *self, struct Scene *scene) {
         return;
     }
     if(is_goaler(self)) fix_the_velo_in_ball(scene, self, nearest_haff(scene, self)->position);
-    else if(is_haff(self)) fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
+    else if(is_haff(self)){
+        if(scene->ball->position.y < 200) {
+            int tmp = rand() % 10;
+            if(tmp <= 4) fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
+            else fix_the_velo_in_ball(scene, self, find_out(self, 0));
+        }
+        else if(scene->ball->position.y > 500) {
+            int tmp = rand() % 10;
+            if(tmp <= 4) fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
+            else fix_the_velo_in_ball(scene, self, find_out(self, 1));
+        }
+        else fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
+    }
     else{
         struct Vec2 place = opponent_goal_pos(scene, self);
         int tmp1 = rand() % 2, tmp2 = rand() % 100;
@@ -301,10 +327,13 @@ void shooting_logic_2_5(struct Player *self, struct Scene *scene) { shooting_log
 
 /* GENERAL CHANGE STATE LOGIC*/
 void change_state_logic_general(struct Player *self, struct Scene *scene) {
-    if((self->position.x - BALL_RADIUS < PITCH_X) ||
+    if(((self->position.x - BALL_RADIUS < PITCH_X) ||
         (self->position.x + BALL_RADIUS > PITCH_W + PITCH_X) ||
         (self->position.y + BALL_RADIUS > PITCH_H + PITCH_Y) ||
-        (self->position.y - BALL_RADIUS < PITCH_Y)) self->state = INTERCEPTING;
+        (self->position.y - BALL_RADIUS < PITCH_Y)) && scene->ball->possessor == self) {
+        self->state = SHOOTING;
+        return;
+    }
     if(scores[0] != scene->first_team->score || scores[1] != scene->second_team->score) { 
         can_move = false;
         if(self == scene->first_team->players[0] || self == scene->second_team->players[0]) {
@@ -334,7 +363,7 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
     }
     else if(is_haff(self)) {
         if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter == self) {
-            if(distance < 7) {
+            if(distance < 5) {
                 self->state = INTERCEPTING;
                 return;
             }
@@ -438,8 +467,8 @@ static struct Talents team1_talents[6] = { // defence , agility , dribbling , sh
     {1, 8, 1, 10}, // Attack2
     {1, 8, 1, 9}, // Attack3
     {3, 5, 5, 7}, // Goaler
-    {3, 7, 3, 7}, // Haff1
-    {3, 7, 3, 7}, // Haff2
+    {3, 7, 2, 8}, // Haff1
+    {3, 7, 2, 8}, // Haff2
 };
 
 /* Team 2 */
@@ -448,8 +477,8 @@ static struct Talents team2_talents[6] = {
     {1, 8, 1, 10}, // Attack2
     {1, 8, 1, 9}, // Attack3
     {3, 5, 5, 7}, // Goaler
-    {3, 7, 3, 7}, // Haff1
-    {3, 7, 3, 7}, // Haff2
+    {3, 7, 2, 8}, // Haff1
+    {3, 7, 2, 8}, // Haff2
 };
 
 struct Talents get_talents(int team, int kit) {
