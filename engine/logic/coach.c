@@ -58,13 +58,13 @@ static float find_distance(struct Vec2 v1, struct Vec2 v2){
 static bool is_goaler(struct Player *player) { return player->kit == 3; }
 static bool is_haff(struct Player *player) { return (player->kit == 5 || player->kit == 4); }
 static bool is_attacker(struct Player *player) { return (player->kit == 0 || player->kit == 1 || player->kit == 2); }
-static bool near_opponent_goal(struct Player *self){
-    if(self->team == 1) return (SCREEN_WIDTH - self->position.x) < 250;
-    else return self->position.x < 250;
+static bool near_opponent_goal(struct Player *self, int dis){
+    if(self->team == 1) return (SCREEN_WIDTH - self->position.x) < dis;
+    else return self->position.x < dis;
 }
 static bool ball_in_our_half(struct Player *self, struct Scene *scene) {
-    if(self->team == 1) return scene->ball->position.x < (SCREEN_WIDTH / 2 + 20);
-    else return scene->ball->position.x > (SCREEN_WIDTH / 2 - 20);
+    if(self->team == 1) return scene->ball->position.x < (SCREEN_WIDTH / 2);
+    else return scene->ball->position.x > (SCREEN_WIDTH / 2);
 }
 static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
     float leng = sqrt(v.x * v.x + v.y * v.y);
@@ -379,7 +379,10 @@ void change_state_logic_general(struct Player *self, struct Scene *scene) {
         else self->state = MOVING;
     }
     else if(is_attacker(self)) {
-        if(ball->possessor == self && near_opponent_goal(self)) { self->state = SHOOTING; ball_last_shooter = self; }
+        int dis;
+        if(self->kit == 1) dis = 320;
+        else dis = 250;
+        if(ball->possessor == self && near_opponent_goal(self, dis)) { self->state = SHOOTING; ball_last_shooter = self; }
         else if((ball->possessor == NULL || (ball->possessor != NULL && ball->possessor->team != self->team)) && ball_last_shooter != self) {
             if(distance < 50) {
                 self->state = INTERCEPTING;
