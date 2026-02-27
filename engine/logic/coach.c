@@ -290,12 +290,12 @@ void shooting_logic_global(struct Player *self, struct Scene *scene) {
     else if(is_haff(self)){
         if(scene->ball->position.y < 200) {
             int tmp = rand() % 10;
-            if(tmp <= 4) fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
+            if(tmp <= 6) fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
             else fix_the_velo_in_ball(scene, self, find_out(self, 0));
         }
         else if(scene->ball->position.y > 500) {
             int tmp = rand() % 10;
-            if(tmp <= 4) fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
+            if(tmp <= 6) fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);
             else fix_the_velo_in_ball(scene, self, find_out(self, 1));
         }
         else fix_the_velo_in_ball(scene, self, random_attacker(scene, self)->position);

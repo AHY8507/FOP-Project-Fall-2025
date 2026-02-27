@@ -41,11 +41,11 @@ static int goal(float x, float y) {
         }
     } // goal is a kind of out so in refree func we have to call goal before out
     // handle special situation
-    if((y + BALL_RADIUS == lower_pole || y - BALL_RADIUS == upper_pole) && x < PITCH_X) {
+    if((fabs(y + BALL_RADIUS - lower_pole) < 5 || fabs(y - BALL_RADIUS - upper_pole) < 5) && x < PITCH_X) {
         printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
         return 2;
     }
-    if((y + BALL_RADIUS == lower_pole || y - BALL_RADIUS == upper_pole) && x > SCREEN_WIDTH - PITCH_MARGIN) {
+    if((fabs(y + BALL_RADIUS - lower_pole) < 5 || fabs(y - BALL_RADIUS - upper_pole) < 5) && x > SCREEN_WIDTH - PITCH_MARGIN) {
         printf("GOAL! Right net hit at x:%.2f, y=%.2f\n", x, y);
         return 1;
     }
