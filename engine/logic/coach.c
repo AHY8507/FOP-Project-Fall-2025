@@ -63,8 +63,8 @@ static bool near_opponent_goal(struct Player *self, int dis){
     else return self->position.x < dis;
 }
 static bool ball_in_our_half(struct Player *self, struct Scene *scene) {
-    if(self->team == 1) return scene->ball->position.x < (SCREEN_WIDTH / 2);
-    else return scene->ball->position.x > (SCREEN_WIDTH / 2);
+    if(self->team == 1) return scene->ball->position.x < (SCREEN_WIDTH / 2 + 15);
+    else return scene->ball->position.x > (SCREEN_WIDTH / 2 - 15);
 }
 static struct Vec2 find_max_velocity(struct Vec2 v, float maxi) {
     float leng = sqrt(v.x * v.x + v.y * v.y);
