@@ -34,12 +34,12 @@ int main(void) {
             if (event.type == SDL_QUIT)
                 running = false;
             // For testing: Move the ball to the click position
-            else if (event.type == SDL_MOUSEBUTTONDOWN) {
-                int mouse_x = event.button.x;
-                int mouse_y = event.button.y;
-                scene.ball->position.x = (float)mouse_x;
-                scene.ball->position.y = (float)mouse_y;
-            }
+            // else if (event.type == SDL_MOUSEBUTTONDOWN) {
+            //     int mouse_x = event.button.x;
+            //     int mouse_y = event.button.y;
+            //     scene.ball->position.x = (float)mouse_x;
+            //     scene.ball->position.y = (float)mouse_y;
+            // }
         }
 
         const Uint32 now = SDL_GetTicks();
