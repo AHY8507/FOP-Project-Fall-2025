@@ -464,8 +464,8 @@ PlayerLogicFn get_change_state_logic(int team, int kit) {
 /* Team 1 */
 static struct Talents team1_talents[6] = { // defence , agility , dribbling , shooting
     {1, 8, 1, 10}, // Attack1
-    {1, 9, 1, 9}, // Attack2
-    {1, 8, 1, 9}, // Attack3
+    {1, 10, 1, 8}, // Attack2
+    {1, 9, 1, 9}, // Attack3
     {3, 5, 5, 7}, // Goaler
     {3, 7, 2, 8}, // Haff1
     {3, 7, 2, 8}, // Haff2
@@ -474,8 +474,8 @@ static struct Talents team1_talents[6] = { // defence , agility , dribbling , sh
 /* Team 2 */
 static struct Talents team2_talents[6] = {
     {1, 8, 1, 10}, // Attack1
-    {1, 9, 1, 9}, // Attack2
-    {1, 8, 1, 9}, // Attack3
+    {1, 10, 1, 8}, // Attack2
+    {1, 9, 1, 9}, // Attack3
     {3, 5, 5, 7}, // Goaler
     {3, 7, 2, 8}, // Haff1
     {3, 7, 2, 8}, // Haff2
