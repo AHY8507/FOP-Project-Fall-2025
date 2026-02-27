@@ -95,8 +95,8 @@ static float attacker_y(struct Player *self) {
 }
 static struct Vec2 attacker_base_pos(struct Player *self) {
     struct Vec2 player;
-    if(self->team == 1) player.x = SCREEN_WIDTH * 0.54f;
-    else player.x = SCREEN_WIDTH * 0.46f;
+    if(self->team == 1) player.x = SCREEN_WIDTH * 0.539f;
+    else player.x = SCREEN_WIDTH * 0.461f;
     player.y = attacker_y(self);
     return player;
 }
